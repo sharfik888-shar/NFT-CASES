@@ -95,18 +95,24 @@ input:focus{border-color:var(--red)}
 @keyframes wglow{50%{box-shadow:0 0 34px rgba(225,29,46,.55)}}
 main>*{animation:rise .45s both}
 .grid>*{animation:rise .5s both}
-.grid>:nth-child(2){animation-delay:.06s}.grid>:nth-child(3){animation-delay:.12s}.grid>:nth-child(4){animation-delay:.18s}.grid>:nth-child(5){animation-delay:.24s}.grid>:nth-child(6){animation-delay:.3s}.grid>:nth-child(7){animation-delay:.36s}.grid>:nth-child(8){animation-delay:.42s}
+.grid>:nth-child(2){animation-delay:.06s}.grid>:nth-child(3){animation-delay:.12s}.grid>:nth-child(4){animation-delay:.18s}.grid>:nth-child(5){animation-delay:.24s}.grid>:nth-child(6){animation-delay:.3s}.grid>:nth-child(7){animation-delay:.36s}.grid>:nth-child(8){animation-delay:.42s}.grid>:nth-child(9){animation-delay:.48s}.grid>:nth-child(10){animation-delay:.54s}.grid>:nth-child(11){animation-delay:.6s}.grid>:nth-child(12){animation-delay:.66s}
 .mbox .pic{animation:float 2.5s ease-in-out infinite}
 .mini,.mults button,nav button{transition:transform .15s,border-color .2s}
 .mini:active,.mults button:active{transform:scale(.92)}
 nav .on i{transform:translateY(-3px) scale(1.15)}
 nav i{transition:transform .25s}
+.bar{height:8px;border-radius:99px;background:#262626;margin-top:10px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--red);box-shadow:0 0 10px var(--red);border-radius:99px;transition:width .4s}
+.pi{width:40px;height:40px;display:inline-grid;place-items:center;font-style:normal;font-size:22px;flex:none}
+.pi img{width:100%;height:100%;object-fit:contain;transform:scale(1.18);-webkit-mask-image:radial-gradient(closest-side,#000 58%,transparent 98%);mask-image:radial-gradient(closest-side,#000 58%,transparent 98%)}
+.pi .bx{width:100%;height:100%}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 <header><div class="logo">NFT <b>CASES</b></div><div class="bal" id="bal">⭐ 0</div></header>
 <main id="main"></main>
 <nav>
 <button data-t="cases" onclick="go('cases')"><i><svg viewBox="0 0 24 24"><path d="M12 3 3 7.5v9L12 21l9-4.5v-9L12 3z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg></i>Кейсы</button>
+<button data-t="pass" onclick="go('pass')"><i><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/><path d="M9 9l2 2 4-4"/></svg></i>Пасс</button>
 <button data-t="up" onclick="go('up')"><i><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/><path d="M7 20h10"/></svg></i>Апгрейд</button>
 <button data-t="inv" onclick="go('inv')"><i><svg viewBox="0 0 24 24"><path d="M6 8h12l1 12H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></i>Инвентарь</button>
 <button data-t="top" onclick="go('top')"><i><svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5v2a3 3 0 0 0 3 3M16 6h3v2a3 3 0 0 1-3 3M12 13v4M8 20h8"/></svg></i>Топ</button>
@@ -129,8 +135,16 @@ const C=[
 ];
 const base='https://nft.fragment.com/gift/';
 C.forEach(c=>c.i=c.i.map((x,k)=>({e:x[0],n:x[1],img:base+x[2]+'-1000.webp',p:c.pp?c.pp[k]:Math.round(c.p*F[k]),w:W[k],t:k})));
+/* Ранги и кейсы для рангов: каждый открывается 1 раз в день */
+const day=()=>new Date().toDateString(),midn=()=>{const d=new Date();d.setHours(24,0,0,0);return d.getTime()};
+const RK=[{n:'Элита',p:5000},{n:'Мастер',p:25000},{n:'Дуров',p:100000},{n:'Админ',p:250000}];
+const mk=(n,rk,a)=>C.push({n,e:'',p:0,d:1,rk,i:a.map((x,k)=>({e:x[0],n:x[1],img:base+x[2]+'-1000.webp',p:x[3],w:k<2?33.33:33.34,t:5+k}))});
+mk('Элита',1,[['🎩','Цилиндр','tophat',200],['💍','Печатка','signetring',500],['🏆','Мини-Оскар','minioscar',1000]]);
+mk('Мастер',2,[['🪖','Героический шлем','heroichelmet',1000],['💎','Ион-кристалл','iongem',2000],['🔮','Хрустальный шар','crystalball',3000]]);
+mk('Дуров VIP',3,[['💍','Кольцо с бриллиантом','diamondring',3000],['🧢','Кепка Дурова','durovscap',5000],['🌙','Лунный кулон','moonpendant',10000]]);
+mk('Админ',4,[['⌚','Часы','swisswatch',3000],['🧞','Лампа джинна','genielamp',10000],['🐸','Плюш Пепе','plushpepe',20000]]);
 const em=(e,u,n)=>`<img src="${u}" alt="${n}" decoding="async" referrerpolicy="no-referrer" onerror="this.outerHTML=this.dataset.e" data-e="${e}">`;
-const CC={'Хэллоуин':['#ffa63d','#d94f00'],'Бесплатный':['#ff5a6b','#b3101f'],'Пляжный':['#4fd7ff','#0086b3'],'Дурова':['#5cbcff','#1666c9'],'Плюш Пепе':['#6fd878','#1f8a2e'],'Снуп Дог':['#b48bff','#5b2fc9'],'Лунный':['#8f9bff','#3a45c4'],'Зимний':['#bdeaff','#4aa6d6']};
+const CC={'Хэллоуин':['#ffa63d','#d94f00'],'Бесплатный':['#ff5a6b','#b3101f'],'Пляжный':['#4fd7ff','#0086b3'],'Дурова':['#5cbcff','#1666c9'],'Плюш Пепе':['#6fd878','#1f8a2e'],'Снуп Дог':['#b48bff','#5b2fc9'],'Лунный':['#8f9bff','#3a45c4'],'Зимний':['#bdeaff','#4aa6d6'],'Элита':['#d1d5db','#4b5563'],'Мастер':['#2dd4a7','#0b5e49'],'Дуров VIP':['#a78bfa','#4c1d95'],'Админ':['#ffd34d','#a85d00']};
 const SY={
 'Хэллоуин':'<path d="M50 60c-10-3-17 4-17 11s7 11 17 8c10 3 17-1 17-8s-7-14-17-11z"/><path d="M50 60q0-6 5-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
 'Бесплатный':'<path d="M50 80C37 71 37 59 44 59c3 0 5 2 6 4 1-2 3-4 6-4 7 0 7 12-6 21z"/>',
@@ -139,40 +153,49 @@ const SY={
 'Плюш Пепе':'<circle cx="43" cy="63" r="5"/><circle cx="57" cy="63" r="5"/><path d="M39 72q11 9 22 0" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
 'Снуп Дог':'<path d="M39 71v-4a11 11 0 0 1 22 0v4" fill="none" stroke="#fff" stroke-width="3"/><rect x="36" y="69" width="6" height="11" rx="3"/><rect x="58" y="69" width="6" height="11" rx="3"/>',
 'Лунный':'<path d="M55 57a13 13 0 1 0 7 22 11 11 0 0 1-7-22z"/>',
-'Зимний':'<path d="M50 57v24M39 63l22 12M61 63L39 75" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>'};
+'Зимний':'<path d="M50 57v24M39 63l22 12M61 63L39 75" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
+'Элита':'<path d="M50 56l12 12-12 14-12-14z"/>',
+'Мастер':'<path d="M50 56l4 9 10 1-8 6 3 10-9-6-9 6 3-10-8-6 10-1z"/>',
+'Дуров VIP':'<path d="M36 70l28-11-9 22-5-9z"/><circle cx="62" cy="60" r="3"/>',
+'Админ':'<path d="M34 80l-3-18 11 8 8-12 8 12 11-8-3 18z"/>'};
 let bi=0;
 const box=n=>{const [a,b]=CC[n]||['#ff5a6b','#b3101f'],id='g'+(bi++);
 return `<svg class="bx" viewBox="0 0 100 100"><defs><linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><linearGradient id="${id}l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".25" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><radialGradient id="${id}r"><stop offset="0" stop-color="${a}" stop-opacity=".55"/><stop offset="1" stop-color="${a}" stop-opacity="0"/></radialGradient></defs><circle cx="50" cy="55" r="48" fill="url(#${id}r)"/><ellipse cx="50" cy="91" rx="34" ry="4.5" fill="#000" opacity=".55"/><rect x="16" y="46" width="68" height="42" rx="7" fill="url(#${id}b)"/><rect x="16" y="76" width="68" height="12" rx="6" fill="#000" opacity=".25"/><rect x="11" y="27" width="78" height="25" rx="7" fill="url(#${id}l)"/><rect x="11" y="45" width="78" height="4" fill="#000" opacity=".28"/><rect x="43" y="44" width="14" height="11" rx="3" fill="#fff"/><circle cx="50" cy="50" r="2.4" fill="${b}"/><g transform="translate(0,4)" fill="#fff" opacity=".95">${SY[n]||''}</g><circle cx="22" cy="35" r="1.6" fill="#fff" opacity=".8"/><circle cx="78" cy="33" r="1.1" fill="#fff" opacity=".8"/></svg>`};
 C.forEach(c=>{c.e=box(c.n);c.i.forEach(x=>x.e=em(x.e,x.img,x.n))});
 const P={START:500,RED:1000,BLACK:1000,PEPE:777,DUROV:2000,SNOOP:420,HELLO:666,MOON:1500,WINTER:1500,BEACH:1000};
-let S={b:1000,inv:[],used:[],fr:0,id:1,sel:null,m:2,nick:'Игрок',o:0,sp:0,best:0,snd:true,vib:true,mus:true,bn:[0,0,0],bc:0},tab='cases',cur=null,busy=false,tt;
+let S={b:1000,inv:[],used:[],fr:0,id:1,sel:null,m:2,nick:'Игрок',o:0,sp:0,best:0,snd:true,vib:true,mus:true,bn:[0,0,0],bc:0,rk:0,dl:{},xp:0,pc:{},tk:{},q:{dk:'',wk:'',d:{},cd:{},w:{},cw:{}}},tab='cases',cur=null,busy=false,tt;
 try{const x=JSON.parse(localStorage.getItem('nftc'));if(x&&typeof x.b==='number')S=Object.assign(S,x)}catch(e){}
 const save=()=>{try{localStorage.setItem('nftc',JSON.stringify(S))}catch(e){}cloudSave();pushScore()};
 function toast(t){const e=$('#toast');e.innerHTML=star(t);e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2300)}
 function pick(c){let r=Math.random()*100;for(const x of c.i){r-=x.w;if(r<0)return x}return c.i[0]}
 const cell=x=>`<div class="cell" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`;
 function go(t){if(busy)return toast('Подожди, идёт открытие…');tab=t;cur=null;render()}
-function view(i){if(busy)return;cur=i;render();scrollTo(0,0)}
+function view(i){if(busy)return;const c=C[i];if(c.rk&&(S.rk||0)<c.rk)return toast('Нужен ранг «'+RK[c.rk-1].n+'». Купи его в профиле');cur=i;render();scrollTo(0,0)}
 function back(){if(busy)return;cur=null;render()}
 function render(){
 setBal();
 document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
 const key=tab+'|'+cur;$('#main').classList.toggle('still',key===lastKey);lastKey=key;
-$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView})[tab]());
+$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView,pass:passView})[tab]());
 cd()}
-function casesView(){return '<h2>Кейсы</h2><div class="grid">'+C.map((c,i)=>`<div class="card" onclick="view(${i})"><div class="pic">${c.e}</div><div class="nm">${c.n}</div><div class="pr">${c.p?'⭐ '+fmt(c.p):'БЕСПЛАТНО'}</div></div>`).join('')+'</div>'}
+function casesView(){return '<h2>Кейсы</h2><div class="grid">'+C.map((c,i)=>{const lk=c.rk&&(S.rk||0)<c.rk;return `<div class="card" style="${lk?'opacity:.5':''}" onclick="view(${i})"><div class="pic">${c.e}</div><div class="nm">${c.n}</div><div class="pr">${lk?'🔒 Ранг «'+RK[c.rk-1].n+'»':c.p?'⭐ '+fmt(c.p):(c.d?'РАЗ В ДЕНЬ':'БЕСПЛАТНО')}</div></div>`}).join('')+'</div>'}
 function caseView(){const c=C[cur],idle=[];for(let k=0;k<20;k++)idle.push(pick(c));
-return `<button class="btn g" style="margin:0 0 12px;padding:10px" onclick="back()">← Назад</button><h2>${c.e} ${c.n}</h2><div id="rouls"><div class="roul"><div class="strip" id="strip">${idle.map(cell).join('')}</div></div></div>${c.p?XS():''}<button class="btn" id="open" onclick="openCase()">${c.p?'Открыть'+(xn>1?' ×'+xn:'')+' за ⭐ '+fmt(c.p*xn):'Открыть бесплатно'}</button><p class="pr" style="text-align:center" id="cd"></p><h2 style="margin-top:18px">Что внутри</h2><div class="grid4">`+c.i.map(x=>`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small><small>${x.w}%</small></div>`).join('')+'</div>'}
-function cd(){if(cur===null||busy)return;const c=C[cur];if(c.p)return;const b=$('#open'),t=$('#cd');if(!b||!t)return;const l=S.fr-Date.now();
-if(l>0){b.disabled=true;t.textContent='Следующий бесплатный кейс через '+Math.floor(l/60000)+':'+String(Math.floor(l/1000)%60).padStart(2,'0')}else{b.disabled=false;t.textContent=''}}
+return `<button class="btn g" style="margin:0 0 12px;padding:10px" onclick="back()">← Назад</button><h2>${c.e} ${c.n}</h2><div id="rouls"><div class="roul"><div class="strip" id="strip">${idle.map(cell).join('')}</div></div></div>${c.p?XS():''}<button class="btn" id="open" onclick="openCase()">${c.p?'Открыть'+(xn>1?' ×'+xn:'')+(c.p*Math.max(0,xn-tkOf(c))?' за ⭐ '+fmt(c.p*Math.max(0,xn-tkOf(c))):' по билету'):'Открыть бесплатно'}</button><p class="pr" style="text-align:center" id="cd">${c.p&&tkOf(c)?'Билетов на этот кейс: '+tkOf(c):''}</p><h2 style="margin-top:18px">Что внутри</h2><div class="grid4">`+c.i.map(x=>`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small><small>${x.w}%</small></div>`).join('')+'</div>'}
+function cd(){if(cur===null||busy)return;const c=C[cur];if(c.p)return;const b=$('#open'),t=$('#cd');if(!b||!t)return;const l=c.d?((S.dl||{})[c.n]===day()?midn()-Date.now():0):S.fr-Date.now(),s=Math.floor(l/1000),z=v=>String(v).padStart(2,'0');
+if(l>0){b.disabled=true;t.textContent=c.d?'Снова доступен через '+Math.floor(s/3600)+':'+z(Math.floor(s/60)%60)+':'+z(s%60):'Следующий бесплатный кейс через '+Math.floor(s/60)+':'+z(s%60)}else{b.disabled=false;t.textContent=''}}
 setInterval(cd,500);
 function openCase(){if(busy||cur===null)return;const c=C[cur],n=c.p?xn:1;
-if(c.p===0&&Date.now()<S.fr)return;
-if(S.b<c.p*n)return toast('Не хватает ⭐ — забери промокод');
-busy=true;S.b-=c.p*n;if(c.p===0)S.fr=Date.now()+300000;
+if(c.rk&&(S.rk||0)<c.rk)return;
+if(c.d&&(S.dl||{})[c.n]===day())return;
+if(c.p===0&&!c.d&&Date.now()<S.fr)return;
+const used=c.p?Math.min(tkOf(c),n):0;
+if(S.b<c.p*(n-used))return toast('Не хватает ⭐ — забери промокод');
+runOpen(c,n,used)}
+function runOpen(c,n,used){
+used=used||0;busy=true;S.b-=c.p*(n-used);if(used)S.tk[c.n]-=used;if(c.d){S.dl=S.dl||{};S.dl[c.n]=day()}else if(c.p===0)S.fr=Date.now()+300000;
 const its=[],arrs=[];
-for(let j=0;j<n;j++){const win=pick(c),arr=[];for(let k=0;k<40;k++)arr.push(k===34?win:pick(c));const it={id:S.id++,e:win.e,n:win.n,p:win.p,t:win.t};S.inv.push(it);S.o++;S.sp+=c.p;S.best=Math.max(S.best,win.p);its.push(it);arrs.push(arr)}
-save();setBal();$('#open').disabled=true;
+for(let j=0;j<n;j++){const win=pick(c),arr=[];for(let k=0;k<40;k++)arr.push(k===34?win:pick(c));const it={id:S.id++,e:win.e,n:win.n,p:win.p,t:win.t};S.inv.push(it);S.o++;S.sp+=j<n-used?c.p:0;S.best=Math.max(S.best,win.p);its.push(it);arrs.push(arr)}
+qadd('open',n);qadd('spend',c.p*(n-used));qadd('drop',Math.max(...its.map(x=>x.p)));save();setBal();$('#open').disabled=true;
 const bx=$('#rouls');bx.innerHTML=arrs.map(()=>'<div class="roul"><div class="strip"></div></div>').join('');
 bx.querySelectorAll('.strip').forEach((st,j)=>{st.innerHTML=star(arrs[j].map(cell).join(''));const x=-(34*100+50)+st.parentElement.clientWidth/2+(Math.random()*60-30);st.getBoundingClientRect();st.style.transition='transform '+(5+j*.3)+'s cubic-bezier(.12,.8,.18,1)';st.style.transform='translate3d('+x+'px,0,0)'});
 for(let k=0;k<24;k++)setTimeout(()=>snd('tick'),250+k*k*8);
@@ -180,8 +203,8 @@ setTimeout(()=>{busy=false;render();snd('win');n>1?modalMany(its):modal(its[0])}
 function modal(it){const d=document.createElement('div');d.className='modal';
 d.innerHTML=star(`<div class="mbox" style="border-color:${TC[it.t]}"><div class="pic" style="width:120px;height:120px;font-size:68px">${it.e}</div><div class="nm" style="font-size:20px">${it.n}</div><div class="pr">⭐ ${fmt(it.p)}</div><button class="btn" id="mk">Забрать</button><button class="btn w" id="ms">Продать за ⭐ ${fmt(it.p)}</button></div>`);
 document.body.appendChild(d);$('#mk').onclick=()=>d.remove();$('#ms').onclick=()=>{sell(it.id);d.remove()}}
-function sell(id){const k=S.inv.findIndex(x=>x.id===id);if(k<0)return;S.b+=S.inv[k].p;S.inv.splice(k,1);if(S.sel===id)S.sel=null;save();render()}
-function sellAll(){if(!S.inv.length)return;const t=S.inv.reduce((a,x)=>a+x.p,0);S.b+=t;S.inv=[];S.sel=null;save();render();toast('Продано на ⭐ '+fmt(t))}
+function sell(id){const k=S.inv.findIndex(x=>x.id===id);if(k<0)return;S.b+=S.inv[k].p;S.inv.splice(k,1);qadd('sell',1);if(S.sel===id)S.sel=null;save();render()}
+function sellAll(){if(!S.inv.length)return;const t=S.inv.reduce((a,x)=>a+x.p,0);S.b+=t;qadd('sell',S.inv.length);S.inv=[];S.sel=null;save();render();toast('Продано на ⭐ '+fmt(t))}
 function invView(){const tot=S.inv.reduce((a,x)=>a+x.p,0);
 return `<h2>Инвентарь</h2><p class="pr" style="margin:-6px 0 12px">Предметов: ${S.inv.length}, стоимость ⭐ ${fmt(tot)}</p>`+(S.inv.length?`<button class="btn g" style="margin:0 0 12px" onclick="sellAll()">Продать всё</button><div class="grid">`+S.inv.slice().reverse().map(x=>`<div class="card" style="border-color:${TC[x.t]}"><div class="pic">${x.e}</div><div class="nm">${x.n}${x.u?' ×'+x.u:''}</div><div class="pr">⭐ ${fmt(x.p)}</div><button class="btn" style="padding:10px;font-size:14px" onclick="sell(${x.id})">Продать</button></div>`).join('')+'</div>':'<div class="card" style="padding:30px"><div class="pic">📦</div><div class="pr">Здесь пусто. Открой первый кейс.</div></div>')}
 function upView(){const ch=Math.round(90/S.m),it=S.inv.find(x=>x.id===S.sel);
@@ -191,7 +214,7 @@ function pickUp(id){if(busy)return;S.sel=id;render()}
 function doUp(){if(busy)return;const it=S.inv.find(x=>x.id===S.sel);if(!it)return;
 busy=true;const ch=Math.round(90/S.m)/100,r=Math.random(),win=r<ch;$('#upb').disabled=true;
 $('#ptr').style.transform='rotate('+(360*5+r*360)+'deg)';
-setTimeout(()=>{busy=false;if(win){it.p*=S.m;it.u=(it.u||1)*S.m;snd('win');toast('Успех! Цена ×'+S.m+' 🔥')}else{S.inv=S.inv.filter(x=>x.id!==it.id);S.sel=null;snd('lose');toast('Не повезло, предмет сгорел 💀')}save();render()},4200)}
+setTimeout(()=>{busy=false;qadd('up',1);if(win){qadd('upw',1);it.p*=S.m;it.u=(it.u||1)*S.m;snd('win');toast('Успех! Цена ×'+S.m+' 🔥')}else{S.inv=S.inv.filter(x=>x.id!==it.id);S.sel=null;snd('lose');toast('Не повезло, предмет сгорел 💀')}save();render()},4200)}
 function promoView(){return `<h2>Промокоды</h2><input id="pi" placeholder="Введи промокод" autocomplete="off" autocapitalize="characters"><button class="btn" onclick="promo()">Активировать</button>`}
 function promo(){const v=$('#pi').value.trim().toUpperCase();if(!v)return toast('Введи промокод');
 if(!P.hasOwnProperty(v))return toast('Такого промокода нет ❌');
@@ -203,18 +226,69 @@ function snd(t){if(S.vib&&t!=='tick'&&navigator.vibrate){try{navigator.vibrate(t
 if(!S.snd)return;try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain(),f={tap:[520,.06],tick:[900,.03],win:[880,.3],lose:[160,.35]}[t]||[500,.05];o.type=t==='lose'?'sawtooth':'sine';o.frequency.value=f[0];o.connect(g);g.connect(AC.destination);g.gain.setValueAtTime(.07,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+f[1]);o.start();o.stop(AC.currentTime+f[1])}catch(e){}}
 document.addEventListener('click',e=>{if(e.target.closest('button,.card,.mini,.row'))snd('tap')});
 const lvl=()=>Math.floor(S.o/5)+1;
+const RC=['Элита','Мастер','Дуров VIP','Админ'];
+function rkView(){return '<h2 style="margin-top:20px">Привилегии</h2>'+RK.map((r,i)=>{const own=(S.rk||0)>i,nx=(S.rk||0)===i;return `<div class="row"><span>${r.n}<div class="pr">Кейс «${RC[i]}» раз в день</div></span>${own?'<b>✓</b>':nx?`<button class="btn" style="width:auto;margin:0;padding:10px 14px;font-size:14px" onclick="buyRk(${i})">⭐ ${fmt(r.p)}</button>`:'<span class="pr">🔒</span>'}</div>`}).join('')}
+function buyRk(i){if(busy||(S.rk||0)!==i)return;if(S.b<RK[i].p)return toast('Не хватает ⭐ на ранг «'+RK[i].n+'»');S.b-=RK[i].p;S.rk=i+1;save();render();snd('win');toast('Ранг «'+RK[i].n+'» получен 🎉')}
+/* ===== Задания и NFT PASS ===== */
+const QD=[
+{id:'a',t:'open',g:3,n:'Открой 3 кейса',r:500,x:30},
+{id:'b',t:'spend',g:2000,n:'Потрать ⭐ 2 000 на кейсы',r:400,x:30},
+{id:'c',t:'sell',g:2,n:'Продай 2 предмета',r:300,x:25},
+{id:'d',t:'up',g:1,n:'Сделай 1 апгрейд',r:600,x:35}];
+const QW=[
+{id:'a',t:'open',g:25,n:'Открой 25 кейсов',r:5000,x:250},
+{id:'b',t:'spend',g:25000,n:'Потрать ⭐ 25 000 на кейсы',r:6000,x:250},
+{id:'c',t:'upw',g:3,n:'Выиграй 3 апгрейда',r:4000,x:200},
+{id:'d',t:'drop',g:5000,n:'Выбей предмет дороже ⭐ 5 000',r:8000,x:300}];
+const XPL=100,PMAX=50;
+/* NFT каждые 10 уровней: [кейс, номер предмета в кейсе, цена] */
+const PN={10:['Пляжный',7,10000],20:['Плюш Пепе',7,25000],30:['Снуп Дог',7,50000],40:['Дурова',7,100000],50:['Лунный',7,250000]};
+const PC=['Хэллоуин','Зимний','Пляжный','Плюш Пепе','Снуп Дог','Дурова','Лунный'];
+let pt=0;
+const tkOf=c=>(S.tk&&S.tk[c.n])||0;
+const wkey=()=>{const d=new Date();d.setHours(0,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toDateString()};
+function qroll(){const q=S.q=S.q||{},dk=day(),wk=wkey();
+if(q.dk!==dk){q.dk=dk;q.d={};q.cd={}}
+if(q.wk!==wk){q.wk=wk;q.w={};q.cw={}}
+q.d=q.d||{};q.cd=q.cd||{};q.w=q.w||{};q.cw=q.cw||{}}
+function qadd(t,v){qroll();[[QD,S.q.d],[QW,S.q.w]].forEach(([L,st])=>L.forEach(q=>{if(q.t===t)st[q.id]=t==='drop'?Math.max(st[q.id]||0,v):(st[q.id]||0)+v}))}
+function claimQ(k,id){qroll();const L=k==='d'?QD:QW,q=L.find(z=>z.id===id),pr=k==='d'?S.q.d:S.q.w,cl=k==='d'?S.q.cd:S.q.cw;
+if(!q||cl[id]||(pr[id]||0)<q.g)return;cl[id]=1;S.b+=q.r;S.xp=(S.xp||0)+q.x;save();render();snd('win');toast('+⭐ '+fmt(q.r)+' и '+q.x+' XP')}
+const PL=()=>Math.min(PMAX,Math.floor((S.xp||0)/XPL));
+function prw(n){const N=PN[n];
+if(N){const c=C.find(z=>z.n===N[0]),x=c.i[N[1]];return{k:'nft',ic:x.e,t:x.n+' · ⭐ '+fmt(N[2]),nft:1}}
+if(n%5===0){const c=C.find(z=>z.n===PC[(n/5+2)%PC.length]);return{k:'case',c:c.n,q:3,ic:c.e,t:'Кейс «'+c.n+'» ×3'}}
+if(n%2===0){const c=C.find(z=>z.n===PC[(n/2)%PC.length]);return{k:'case',c:c.n,q:1,ic:c.e,t:'Кейс «'+c.n+'» ×1'}}
+const v=500+n*100;return{k:'stars',v,ic:'⭐',t:'⭐ '+fmt(v)}}
+function giveP(n){const r=prw(n);S.pc=S.pc||{};S.tk=S.tk||{};S.pc[n]=1;
+if(r.k==='stars')S.b+=r.v;
+else if(r.k==='case')S.tk[r.c]=(S.tk[r.c]||0)+r.q;
+else{const N=PN[n],c=C.find(z=>z.n===N[0]),x=c.i[N[1]];S.inv.push({id:S.id++,e:x.e,n:x.n,p:N[2],t:7})}
+return r}
+function claimP(n){if(busy||(S.pc||{})[n]||PL()<n)return;const r=giveP(n);save();render();snd('win');toast('Получено: '+r.t)}
+function claimAllP(){if(busy)return;let c=0;for(let n=1;n<=PL();n++)if(!(S.pc||{})[n]){giveP(n);c++}if(!c)return;save();render();snd('win');toast('Забрано наград: '+c)}
+function setPt(k){pt=k;render()}
+function passView(){qroll();
+const seg=`<div class="mults" style="margin-bottom:14px"><button class="${pt===0?'on':''}" onclick="setPt(0)">Задания</button><button class="${pt===1?'on':''}" onclick="setPt(1)">NFT PASS</button></div>`;
+const L=PL(),xp=S.xp||0;
+if(pt===0){
+const qs=(k,Ls,pr,cl)=>Ls.map(q=>{const p=pr[q.id]||0,done=p>=q.g,got=cl[q.id],w=Math.min(100,p/q.g*100);
+return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span>${q.n}<div class="pr">Награда: ⭐ ${fmt(q.r)} + ${q.x} XP</div></span>${got?'<b>✓</b>':done?`<button class="btn" style="width:auto;margin:0;padding:10px 14px;font-size:14px" onclick="claimQ('${k}','${q.id}')">Забрать</button>`:`<span class="pr">${fmt(Math.min(p,q.g))}/${fmt(q.g)}</span>`}</div><div class="bar"><i style="width:${w}%"></i></div></div>`}).join('');
+const hrs=Math.max(1,Math.ceil((midn()-Date.now())/36e5)),dl=7-((new Date().getDay()+6)%7);
+return seg+`<h2>Ежедневные</h2><p class="pr" style="margin:-6px 0 12px">Обновятся через ${hrs} ч</p>`+qs('d',QD,S.q.d,S.q.cd)+`<h2 style="margin-top:20px">Еженедельные</h2><p class="pr" style="margin:-6px 0 12px">Обновятся через ${dl} дн.</p>`+qs('w',QW,S.q.w,S.q.cw)}
+const av=Array.from({length:PMAX},(_,i)=>i+1).filter(n=>n<=L&&!(S.pc||{})[n]).length,pct=L>=PMAX?100:xp%XPL;
+const rows=Array.from({length:PMAX},(_,i)=>{const n=i+1,r=prw(n),got=(S.pc||{})[n],ok=L>=n;
+return `<div class="row" style="font-size:14px;${r.nft?'border-color:var(--red);box-shadow:0 0 14px rgba(225,29,46,.3)':''}"><span style="display:flex;align-items:center;gap:12px;min-width:0"><b style="width:26px;color:var(--mut)">${n}</b><i class="pi">${r.ic}</i><span>${r.t}</span></span>${got?'<b>✓</b>':ok?`<button class="btn" style="width:auto;margin:0;padding:10px 14px;font-size:14px" onclick="claimP(${n})">Забрать</button>`:'<span class="pr">🔒</span>'}</div>`}).join('');
+return seg+`<div class="card" style="text-align:left;margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center"><div class="nm" style="font-size:18px">NFT <span style="color:var(--red)">PASS</span></div><div class="nm">Уровень ${L}/${PMAX}</div></div><div class="bar"><i style="width:${pct}%"></i></div><div class="pr">${L>=PMAX?'Максимальный уровень':'XP: '+(xp%XPL)+'/'+XPL+' до уровня '+(L+1)+'. XP дают задания'}</div>${av?`<button class="btn" onclick="claimAllP()">Забрать всё (${av})</button>`:''}</div>`+rows}
 const sw=(k,t)=>`<div class="row" onclick="tog('${k}')"><span>${t}</span><i class="sw ${S[k]?'on':''}"></i></div>`;
 function tog(k){S[k]=!S[k];save();render()}
-function setNick(v){S.nick=v.replace(/[<>&"]/g,'').trim().slice(0,14)||'Игрок';save();render()}
 function resetAll(){if(!confirm('Сбросить весь прогресс?'))return;try{localStorage.removeItem('nftc')}catch(e){}try{CS&&CS.setItem('n','0')}catch(e){}setTimeout(()=>location.reload(),500)}
 function topList(v){const L=[['CryptoKing',250000],['NFT_Master',120000],['Pepe_Lord',64000],['SnoopFan',31000],['Dubai_Whale',17500],['Gift_Hunter',9800],['Newbie',4200],['Lucky_Sam',2100],['Case_Fan',900],[S.nick,v,1]].sort((a,b)=>b[1]-a[1]);
 return '<div>'+L.map((x,i)=>`<div class="top ${x[2]?'me':''}"><b>${i+1}</b><span>${x[2]?x[0]+' (ты)':x[0]}</span>⭐ ${fmt(x[1])}</div>`).join('')+'</div>'}
 function profView(){const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);
 return `${banner()}
 <h2>Статистика</h2><div class="grid"><div class="card"><div class="nm">${S.o}</div><div class="pr">Открыто кейсов</div></div><div class="card"><div class="nm">⭐ ${fmt(S.best)}</div><div class="pr">Лучший дроп</div></div><div class="card"><div class="nm">⭐ ${fmt(S.sp)}</div><div class="pr">Потрачено</div></div><div class="card"><div class="nm">⭐ ${fmt(v)}</div><div class="pr">Богатство</div></div></div>
-<h2 style="margin-top:20px">Настройки</h2>${sw('mus','Музыка')}${sw('snd','Звук')}${sw('vib','Вибрация')}<button class="btn" onclick="exportSave()">Скопировать код прогресса</button><button class="btn g" onclick="importSave()">Загрузить прогресс по коду</button><p class="pr" style="margin:10px 2px">Если после выхода из игры всё пропадает, скопируй код и сохрани в заметках. В следующий раз загрузи его здесь.</p><button class="btn g" onclick="resetAll()">Сбросить прогресс</button>`}
-function exportSave(){const c=btoa(unescape(encodeURIComponent(JSON.stringify(S))));const ok=()=>toast('Код скопирован. Сохрани его в заметках');(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(c):Promise.reject()).then(ok).catch(()=>{prompt('Скопируй код прогресса:',c)})}
-function importSave(){const c=prompt('Вставь код прогресса');if(!c)return;try{const x=JSON.parse(decodeURIComponent(escape(atob(c.trim()))));if(typeof x.b!=='number')throw 0;Object.assign(S,x);save();render();toast('Прогресс загружен')}catch(e){toast('Неверный код')}}
+${rkView()}<h2 style="margin-top:20px">Настройки</h2>${sw('mus','Музыка')}${sw('snd','Звук')}${sw('vib','Вибрация')}<button class="btn g" onclick="resetAll()">Сбросить прогресс</button>`}
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage;let ct,cloudReady=false;
 if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor('#0a0a0a');TG.setBackgroundColor&&TG.setBackgroundColor('#0a0a0a')}catch(e){}}
 function cloudSave(){if(!CS||!cloudReady)return;clearTimeout(ct);ct=setTimeout(()=>{try{const j=JSON.stringify(S),n=Math.ceil(j.length/3500);for(let k=0;k<n;k++)CS.setItem('c'+k,j.slice(k*3500,(k+1)*3500));CS.setItem('n',String(n))}catch(e){}},500)}
@@ -223,11 +297,11 @@ const BG=new Audio('music.mp3');BG.loop=true;BG.volume=.35;BG.preload='auto';
 function musicSync(){try{if(S.mus&&!document.hidden){const p=BG.play();if(p&&p.catch)p.catch(()=>{})}else BG.pause()}catch(e){}}
 document.addEventListener('click',musicSync);document.addEventListener('visibilitychange',musicSync);
 const BC=[['#e11d2e','#4a0a10'],['#ff7a00','#6b2800'],['#2aa5ff','#0a2a5e'],['#3fae49','#0d3814'],['#8a5cf5','#25135e'],['#6b7bff','#0f1650']];
-try{const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user;if(u&&S.nick==='Игрок')S.nick=(u.username||u.first_name||'Игрок').replace(/[<>&"]/g,'').slice(0,14)||'Игрок'}catch(e){}
+try{const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user;if(u)S.nick=(u.username||u.first_name||'Игрок').replace(/[<>&"]/g,'').slice(0,14)||'Игрок'}catch(e){}
 function banner(){const c=BC[S.bc]||BC[0],u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user,L=(S.nick[0]||'И').toUpperCase();
 const av=u&&u.photo_url?`<img src="${u.photo_url}" alt="" referrerpolicy="no-referrer" data-l="${L}" onerror="this.outerHTML=this.dataset.l">`:L;
 const sl=[0,1,2].map(i=>{const it=S.inv.find(x=>x.id===S.bn[i]);return `<div class="sl ${it?'f':''}" ${it?`style="border-color:${TC[it.t]}"`:''} onclick="pickSlot(${i})">${it?it.e:'+'}</div>`}).join('');
-return `<div class="bnr" style="background:linear-gradient(135deg,${c[0]},${c[1]})"><div class="slots">${sl}</div></div><div class="who"><div class="ava2">${av}</div><div style="flex:1;min-width:0"><input value="${S.nick}" maxlength="14" onchange="setNick(this.value)" style="text-transform:none;padding:10px"><div class="pr" style="margin-top:4px">Уровень ${lvl()}</div></div></div><div class="dots">${BC.map((x,i)=>`<i class="dot ${i===S.bc?'on':''}" style="background:linear-gradient(135deg,${x[0]},${x[1]})" onclick="setBC(${i})"></i>`).join('')}</div>`}
+return `<div class="bnr" style="background:linear-gradient(135deg,${c[0]},${c[1]})"><div class="slots">${sl}</div></div><div class="who"><div class="ava2">${av}</div><div style="flex:1;min-width:0"><div style="font-size:22px;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(u&&u.username?'@'+u.username:S.nick)}</div><div class="pr" style="margin-top:4px">Уровень ${lvl()}${S.rk?' · '+RK[S.rk-1].n:''}</div></div></div><div class="dots">${BC.map((x,i)=>`<i class="dot ${i===S.bc?'on':''}" style="background:linear-gradient(135deg,${x[0]},${x[1]})" onclick="setBC(${i})"></i>`).join('')}</div>`}
 function setBC(i){S.bc=i;save();render()}
 function pickSlot(i){if(busy)return;const used=S.bn.filter(Boolean),L=S.inv.filter(x=>!used.includes(x.id)||x.id===S.bn[i]);
 const d=document.createElement('div');d.className='modal';
@@ -243,7 +317,7 @@ function setX(k){if(busy)return;xn=k;render()}
 function modalMany(its){const d=document.createElement('div');d.className='modal';const tot=its.reduce((a,x)=>a+x.p,0);
 d.innerHTML=star(`<div class="mbox" style="border-color:#e11d2e"><div class="nm" style="font-size:18px;margin-bottom:10px">Выпало подарков: ${its.length}</div><div class="grid4">${its.map(x=>`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`).join('')}</div><button class="btn" id="mk">Забрать все</button><button class="btn w" id="ms">Продать все за ⭐ ${fmt(tot)}</button></div>`);
 document.body.appendChild(d);$('#mk').onclick=()=>d.remove();
-$('#ms').onclick=()=>{its.forEach(x=>{const k=S.inv.findIndex(y=>y.id===x.id);if(k>=0){S.b+=S.inv[k].p;S.inv.splice(k,1)}});S.sel=null;save();render();d.remove()}}
+$('#ms').onclick=()=>{its.forEach(x=>{const k=S.inv.findIndex(y=>y.id===x.id);if(k>=0){S.b+=S.inv[k].p;S.inv.splice(k,1);qadd('sell',1)}});S.sel=null;save();render();d.remove()}}
 function topView(){setTimeout(loadTop,0);return '<h2>Топ игроков</h2><p class="pr" style="margin:-6px 0 12px">По стоимости баланса и предметов</p><div id="toplist"><p class="pr">Загрузка…</p></div>'}
 /* SUPABASE: вставь сюда Project URL и anon public key */
 const SB_URL='https://qmzhoihcxzhawqkbqgiv.supabase.co',SB_KEY='sb_publishable_nJx_YguXl4vjU7HQw1qPEw_abZitgjf';
