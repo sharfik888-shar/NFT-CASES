@@ -157,7 +157,7 @@ nav i{transition:transform .25s}
 <div id="toast"></div>
 <script>
 const STAR='<svg class="st" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#ffc22e"/><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8z" fill="#fff" opacity=".22"/></svg>';const star=h=>h.replace(/⭐(?![^<]*>)/g,STAR);const $=s=>document.querySelector(s),fmt=n=>Math.round(n).toLocaleString('ru-RU');
-const F=[.3,.5,.8,1,1.5,3,8,25],W=[32,26,18,11,7,3.8,1.8,.4],TC=['#444','#555','#777','#aaa','#ff6b6b','#ff2d3d','#e11d2e','#fff'];
+const F=[.3,.5,.8,1,1.5,4,15,60],W=[32,26,18,11,7,3.8,1.8,.4],TC=['#444','#555','#777','#aaa','#ff6b6b','#ff2d3d','#e11d2e','#fff'];
 const C=[
 {n:'Хэллоуин',e:'🎃',p:150,i:[['🕯️','Вечная свеча','eternalcandle'],['🍄','Мухомор','spyagaric'],['🐈‍⬛','Испуганный кот','scaredcat'],['🍭','Тыквенный леденец','lolpop'],['🎃','Злая тыква','madpumpkin'],['💀','Цветок-череп','skullflower'],['🧙','Шляпа ведьмы','witchhat'],['🍲','Котёл ведьмы','hexpot']]},
 {n:'Бесплатный',e:'🎁',p:0,pp:[15,25,40,60,90,120,160,200],i:[['🍪','Сердечко-печенье','cookieheart'],['🌹','Букет роз','lushbouquet'],['🕯️','Свеча любви','lovecandle'],['🧸','Мишка','toybear'],['💝','Валентинка','valentinebox'],['🧪','Зелье любви','lovepotion'],['💍','Кольцо с бриллиантом','diamondring'],['❤️','Сердце-медальон','heartlocket']]},
@@ -182,7 +182,7 @@ const C=[
 {n:'Сокровища',e:'🏴‍☠️',p:800,i:[['💰','Мешок добычи','lootbag'],['🥇','Медаль победы','victorymedal'],['💍','Обручальное кольцо','bondedring'],['🔮','Хрустальный шар','crystalball'],['🧞','Лампа джинна','genielamp'],['❤️','Сердце-медальон','heartlocket'],['🪐','Астральный осколок','astralshard'],['💍','Кольцо с бриллиантом','diamondring']]}
 ];
 const base='https://nft.fragment.com/gift/';
-C.forEach(c=>c.i=c.i.map((x,k)=>({e:x[0],n:x[1],img:base+x[2]+'-1000.webp',p:c.pp?c.pp[k]:Math.round(c.p*(k==7&&c.p>=400?260:F[k])),w:W[k],t:k})));
+C.forEach(c=>c.i=c.i.map((x,k)=>({e:x[0],n:x[1],img:base+x[2]+'-1000.webp',p:c.pp?c.pp[k]:Math.round(c.p*(k==7&&c.p>=400?300:F[k])),w:W[k],t:k})));
 /* Ранги и кейсы для рангов: каждый открывается 1 раз в день */
 const day=()=>new Date().toDateString(),midn=()=>{const d=new Date();d.setHours(24,0,0,0);return d.getTime()};
 const RK=[{n:'Элита',p:5000},{n:'Мастер',p:25000},{n:'Дуров',p:100000},{n:'Админ',p:250000}];
@@ -269,7 +269,7 @@ us=us.filter(id=>S.inv.some(x=>x.id===id));const sum=usum();
 if(tg&&(tg.p<=sum||tg.p>sum*90))tg=null;
 const seg=`<div class="mults" style="margin-bottom:14px"><button class="${ut?'':'on'}" onclick="setUt(0)">Апгрейд</button><button class="${ut?'on':''}" onclick="setUt(1)">Контракт</button></div>`;
 const inv=S.inv.length?'<div class="grid4">'+S.inv.map(x=>`<div class="mini ${us.includes(x.id)?'sel':''}" onclick="tu(${x.id})">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`).join('')+'</div>':'<p class="pr">Нет предметов. Сначала открой кейс.</p>';
-if(ut){const mn=sum*.5,mx=sum*1.5;
+if(ut){const mn=sum/3,mx=sum*2;
 return seg+`<div class="card" style="margin-bottom:12px"><div id="cres" style="min-height:92px;display:grid;place-items:center;font-size:56px">${us.length?'📜':'❔'}</div><div class="nm">Сумма ⭐ ${fmt(sum)}</div><div class="pr">${us.length?'Выпадет подарок от ⭐ '+fmt(mn)+' до ⭐ '+fmt(mx):'Выбери от 3 до 10 подарков'}</div><div class="bar"><i style="width:${us.length*10}%"></i></div><div class="pr">Выбрано ${us.length}/10 (минимум 3)</div></div><button class="btn" id="upb" onclick="doCt()" ${us.length>=3?'':'disabled'}>Подписать контракт</button><h2 style="margin-top:20px">Твои подарки</h2>`+inv}
 const ch=tg?chOf(sum,tg):0,first=S.inv.find(x=>x.id===us[0]);
 const L=us.length?`<div class="slot f">${first.e}<b>${us.length>1?'×'+us.length+' предм.':first.n}</b><small>⭐ ${fmt(sum)}</small></div>`:'<div class="slot">＋<small>Твой подарок</small></div>';
@@ -281,7 +281,7 @@ $('#ndl').style.transform='rotate('+(360*5+r*360)+'deg)';
 setTimeout(()=>{busy=false;S.inv=S.inv.filter(x=>!ids.includes(x.id));us=[];tg=null;S.ua=(S.ua||0)+1;qadd('up',1);
 let it=null;if(win){S.uw=(S.uw||0)+1;qadd('upw',1);it={id:S.id++,e:t.e,n:t.n,p:t.p,t:t.t};S.inv.push(it);snd('win')}else{snd('lose');toast('Не повезло, предметы сгорели 💀')}
 save();render();if(it)modal(it)},4300)}
-function doCt(){if(busy||us.length<3)return;const sum=usum(),ids=us.slice();let c=CAT.filter(x=>x.p>=sum*.5&&x.p<=sum*1.5);if(!c.length)c=[CAT.reduce((a,x)=>Math.abs(x.p-sum)<Math.abs(a.p-sum)?x:a)];
+function doCt(){if(busy||us.length<3)return;const sum=usum(),ids=us.slice();let c=CAT.filter(x=>x.p>=sum/3&&x.p<=sum*2);if(!c.length){const up=CAT.filter(x=>x.p>=sum/3);c=up.length?[up[0]]:[CAT[CAT.length-1]]}
 const t=c[Math.floor(Math.random()*c.length)],el=$('#cres');busy=true;$('#upb').disabled=true;
 const iv=setInterval(()=>{el.innerHTML=CAT[Math.floor(Math.random()*CAT.length)].e;snd('tick')},90);
 setTimeout(()=>{clearInterval(iv);busy=false;S.inv=S.inv.filter(x=>!ids.includes(x.id));us=[];S.ct=(S.ct||0)+1;const it={id:S.id++,e:t.e,n:t.n,p:t.p,t:t.t};S.inv.push(it);save();render();snd('win');modal(it)},2600)}
@@ -444,17 +444,18 @@ $('#jm').style.color='#4ade80';$('#jz').textContent='Забрано +⭐ '+fmt(w
 function jetCrash(){J.run=0;busy=false;jetDraw();$('#rk').innerHTML='💥';$('#jm').style.color='#ff5a6b';$('#jz').textContent='Ракета взорвалась';$('#jbtn').textContent='Запустить снова';
 S.jh=(S.jh||[]).concat({m:J.m,w:0}).slice(-30);save();jetHist();snd('lose')}
 /* ===== РЫНОК И ОБМЕН ===== */
-let mt=0,MK=[],TR=[],ti=0,cdl=0;
+let ms=0,mt=0,MK=[],TR=[],ti=0,cdl=0;
 const nn=t=>String(t||'').trim().replace(/^@/,'').toLowerCase().slice(0,32);
 const iof=j=>{j=j||{};const n=String(j.n||'').replace(/[<>&"'`]/g,'').slice(0,60),c=CAT.find(x=>x.n===n);return{n,p:Math.max(0,Math.floor(+j.p)||0),t:Math.min(7,Math.max(0,Math.floor(+j.t)||0)),e:c?c.e:'🎁'}};
 const sb=(path,o)=>fetch(SB_URL+'/rest/v1/'+path,Object.assign({headers:Object.assign({Prefer:'return=representation'},sbH)},o)).then(r=>r.json());
 const jb=x=>JSON.stringify(x),mi=it=>({n:it.n,p:it.p,t:it.t});
 const addIt=j=>{const it=iof(j);S.inv.push({id:S.id++,e:it.e,n:it.n,p:it.p,t:it.t});return it};
 function openMk(k){if(busy)return;mt=k;go('mk')}
+function setMs(k){if(busy)return;ms=k;render()}
 function setMt(k){if(busy)return;mt=k;render()}
-function mkView(){setTimeout(mkLoad,0);return `<div class="mults" style="margin-bottom:14px"><button class="${mt==0?'on':''}" onclick="setMt(0)">Рынок</button><button class="${mt==1?'on':''}" onclick="setMt(1)">Мои лоты</button><button class="${mt==2?'on':''}" onclick="setMt(2)">Обмен</button></div><p class="pr" style="margin:-4px 0 12px">${mt==2?'Обмен для друзей: предложи подарок игроку по его нику, он выберет, что дать взамен.':'Цены ставят игроки. Комиссия 5% при продаже. Выставить подарок можно в Инвентаре.'}</p><div id="mkb"><p class="pr">Загрузка…</p></div>`}
+function mkView(){setTimeout(mkLoad,0);return `<div class="mults" style="margin-bottom:14px"><button class="${mt==0?'on':''}" onclick="setMt(0)">Рынок</button><button class="${mt==1?'on':''}" onclick="setMt(1)">Мои лоты</button><button class="${mt==2?'on':''}" onclick="setMt(2)">Обмен</button></div>${mt<2?`<div class="mults" style="margin-bottom:12px"><button class="${ms?'':'on'}" onclick="setMs(0)">Сначала дешёвые</button><button class="${ms?'on':''}" onclick="setMs(1)">Сначала дорогие</button></div>`:''}<p class="pr" style="margin:-4px 0 12px">${mt==2?'Обмен для друзей: предложи подарок игроку по его нику, он выберет, что дать взамен.':'Цены ставят игроки. Комиссия 5% при продаже. Выставить подарок можно в Инвентаре.'}</p><div id="mkb"><p class="pr">Загрузка…</p></div>`}
 async function mkLoad(){const el=$('#mkb');if(!el)return;claimDel();
-try{if(mt<2){const L=await sb('market?status=eq.active&order=created_at.desc&limit=40'+(mt?'&seller_id=eq.'+S.uid:''));if(!Array.isArray(L))throw 0;MK=L;
+try{if(mt<2){const L=await sb('market?status=eq.active&order=price.'+(ms?'desc':'asc')+'&limit=100'+(mt?'&seller_id=eq.'+S.uid:''));if(!Array.isArray(L))throw 0;MK=L;
 el.innerHTML=star(L.length?'<div class="grid">'+L.map((l,i)=>{const it=iof(l.item),me=l.seller_id===S.uid;return `<div class="card" style="border-color:${TC[it.t]}"><div class="pic">${it.e}</div><div class="nm">${it.n}</div><div class="pr">${esc(l.seller_nick||'')}</div><div class="nm" style="margin-top:4px">⭐ ${fmt(l.price)}</div><button class="btn" style="padding:10px;font-size:14px" onclick="${me?'mkCancel':'mkBuy'}(${i})">${me?'Снять':'Купить'}</button></div>`}).join('')+'</div>':'<p class="pr">Пока пусто. Выставь подарок из Инвентаря.</p>')}
 else{const [a,b]=await Promise.all([sb('trades?status=eq.pending&to_nick=eq.'+encodeURIComponent(nn(S.nick))),sb('trades?status=eq.pending&from_id=eq.'+S.uid)]);if(!Array.isArray(a)||!Array.isArray(b))throw 0;TR=a.concat(b);
 const row=(t,i)=>{const it=iof(t.item),inc=i<a.length;return `<div class="row" style="display:block"><div style="display:flex;align-items:center;gap:12px"><i class="pi">${it.e}</i><span style="flex:1;min-width:0">${it.n}<div class="pr">${inc?'От '+esc(t.from_nick||'игрока'):'Для @'+esc(t.to_nick)} · ⭐ ${fmt(it.p)}</div></span></div>${inc?`<button class="btn" style="padding:10px;font-size:14px" onclick="trChoose(${i})">Ответить</button>`:`<button class="btn g" style="padding:10px;font-size:14px" onclick="trCancel(${i})">Отменить</button>`}</div>`};
