@@ -245,11 +245,13 @@ function runOpen(c,n,used){
 used=used||0;busy=true;S.b-=c.p*(n-used);if(used)S.tk[c.n]-=used;if(c.d){S.dl=S.dl||{};S.dl[c.n]=day()}else if(c.p===0)S.fr=Date.now()+300000;
 const its=[],arrs=[];
 for(let j=0;j<n;j++){const win=pick(c),arr=[];for(let k=0;k<40;k++)arr.push(k===34?win:pick(c));const it={id:S.id++,e:win.e,n:win.n,p:win.p,t:win.t};S.inv.push(it);S.o++;S.sp+=j<n-used?c.p:0;S.best=Math.max(S.best,win.p);its.push(it);arrs.push(arr)}
-qadd('open',n);qadd('spend',c.p*(n-used));qadd('drop',Math.max(...its.map(x=>x.p)));save();setBal();$('#open').disabled=true;
+qadd('open',n);qadd('spend',c.p*(n-used));qadd('drop',Math.max(...its.map(x=>x.p)));save();setBal();{const o=$('#open');o.textContent='Пропустить ⏩';o.onclick=skipOpen}
 const bx=$('#rouls');bx.innerHTML=arrs.map(()=>'<div class="roul"><div class="strip"></div></div>').join('');
 bx.querySelectorAll('.strip').forEach((st,j)=>{st.innerHTML=star(arrs[j].map(cell).join(''));const x=-(34*100+50)+st.parentElement.clientWidth/2+(Math.random()*60-30);st.getBoundingClientRect();st.style.transition='transform '+(5+j*.3)+'s cubic-bezier(.12,.8,.18,1)';st.style.transform='translate3d('+x+'px,0,0)'});
-for(let k=0;k<24;k++)setTimeout(()=>snd('tick'),250+k*k*8);
-setTimeout(()=>{busy=false;render();snd('win');n>1?modalMany(its):modal(its[0])},5400+n*300)}
+const tks=[];for(let k=0;k<24;k++)tks.push(setTimeout(()=>snd('tick'),250+k*k*8));
+const fin=()=>{tks.forEach(clearTimeout);clearTimeout(ot);SK=null;busy=false;render();snd('win');n>1?modalMany(its):modal(its[0])};
+ot=setTimeout(fin,5400+n*300);SK=fin;if(S.fast)fin()}
+let ot,SK=null;function skipOpen(){if(SK)SK()}
 function modal(it){const d=document.createElement('div');d.className='modal';
 d.innerHTML=star(`<div class="mbox" style="border-color:${TC[it.t]}"><div class="pic" style="width:120px;height:120px;font-size:68px">${it.e}</div><div class="nm" style="font-size:20px">${it.n}</div><div class="pr">⭐ ${fmt(it.p)}</div><button class="btn" id="mk">Забрать</button><button class="btn w" id="ms">Продать за ⭐ ${fmt(it.p)}</button></div>`);
 document.body.appendChild(d);$('#mk').onclick=()=>d.remove();$('#ms').onclick=()=>{sell(it.id);d.remove()}}
@@ -375,7 +377,7 @@ return `${banner()}
 <div class="card" style="text-align:left;margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="chip" style="color:${t[2]}">${t[0]}</span><div class="nm">Уровень ${lvl()}</div></div><div class="bar"><i style="width:${S.o%5*20}%"></i></div><div class="pr">Ещё ${5-S.o%5} кейсов до уровня ${lvl()+1}</div></div>
 <h2>Статистика</h2><div class="grid"><div class="card"><div class="nm">${S.o}</div><div class="pr">Открыто кейсов</div></div><div class="card"><div class="nm">⭐ ${fmt(S.best)}</div><div class="pr">Лучший дроп</div></div><div class="card"><div class="nm">⭐ ${fmt(S.sp)}</div><div class="pr">Потрачено</div></div><div class="card"><div class="nm">⭐ ${fmt(v)}</div><div class="pr">Богатство</div></div><div class="card"><div class="nm">${S.uw||0}/${S.ua||0}</div><div class="pr">Апгрейды (победы)</div></div><div class="card"><div class="nm">${(S.jm||0).toFixed(2)}x</div><div class="pr">Рекорд в Джете</div></div></div>
 <h2 style="margin-top:20px">Достижения ${na}/${ACH.length}</h2><div class="g3">${ACH.map(a=>`<div class="ach ${a[2]()?'on':''}"><i>${a[0]}</i><small>${a[1]}</small></div>`).join('')}</div>
-${rkView()}<h2 style="margin-top:20px">Настройки</h2>${sw('mus','Музыка')}${sw('snd','Звук')}${sw('vib','Вибрация')}<button class="btn g" onclick="resetAll()">Сбросить прогресс</button><p class="pr" style="margin:10px 2px">v7 · Telegram: ${tgUser()?esc(tgUser().username?'@'+tgUser().username:'юзернейма нет'):'не определён'}</p>`}
+${rkView()}<h2 style="margin-top:20px">Настройки</h2>${sw('fast','Без анимации кейсов')}${sw('mus','Музыка')}${sw('snd','Звук')}${sw('vib','Вибрация')}<button class="btn g" onclick="resetAll()">Сбросить прогресс</button><p class="pr" style="margin:10px 2px">v7 · Telegram: ${tgUser()?esc(tgUser().username?'@'+tgUser().username:'юзернейма нет'):'не определён'}</p>`}
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage;let ct,cloudReady=false;
 if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor('#0a0a0a');TG.setBackgroundColor&&TG.setBackgroundColor('#0a0a0a')}catch(e){}}
 function cloudSave(){if(!CS||!cloudReady)return;clearTimeout(ct);ct=setTimeout(()=>{try{const j=JSON.stringify(S),n=Math.ceil(j.length/3500);for(let k=0;k<n;k++)CS.setItem('c'+k,j.slice(k*3500,(k+1)*3500));CS.setItem('n',String(n))}catch(e){}},500)}
