@@ -219,10 +219,10 @@ document.body.appendChild(d);$('#mk').onclick=()=>d.remove();
 $('#ms').onclick=()=>{its.forEach(x=>{const k=S.inv.findIndex(y=>y.id===x.id);if(k>=0){S.b+=S.inv[k].p;S.inv.splice(k,1)}});S.sel=null;save();render();d.remove()}}
 function topView(){setTimeout(loadTop,0);return '<h2>Топ игроков</h2><p class="pr" style="margin:-6px 0 12px">По стоимости баланса и предметов</p><div id="toplist"><p class="pr">Загрузка…</p></div>'}
 /* SUPABASE: вставь сюда Project URL и anon public key */
-const SB_URL='',SB_KEY='';
+const SB_URL='https://qmzhoihcxzhawqkbqgiv.supabase.co',SB_KEY='sb_publishable_nJx_YguXl4vjU7HQw1qPEw_abZitgjf';
 if(!S.uid)S.uid=(TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user)?'tg'+TG.initDataUnsafe.user.id:'w'+Math.random().toString(36).slice(2)+Date.now().toString(36);
 const esc=t=>String(t).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
-const sbH={apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'};
+const sbH={apikey:SB_KEY,'Content-Type':'application/json'};
 let st2;
 function pushScore(){if(!SB_URL)return;clearTimeout(st2);st2=setTimeout(()=>{const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);fetch(SB_URL+'/rest/v1/players?on_conflict=id',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates,return=minimal'},sbH),body:JSON.stringify({id:S.uid,nick:S.nick,score:Math.round(v)})}).catch(()=>{})},1500)}
 async function loadTop(){const el=$('#toplist');if(!el)return;const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);
