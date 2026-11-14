@@ -292,12 +292,13 @@ ${rkView()}<h2 style="margin-top:20px">Настройки</h2>${sw('mus','Муз
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage;let ct,cloudReady=false;
 if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor('#0a0a0a');TG.setBackgroundColor&&TG.setBackgroundColor('#0a0a0a')}catch(e){}}
 function cloudSave(){if(!CS||!cloudReady)return;clearTimeout(ct);ct=setTimeout(()=>{try{const j=JSON.stringify(S),n=Math.ceil(j.length/3500);for(let k=0;k<n;k++)CS.setItem('c'+k,j.slice(k*3500,(k+1)*3500));CS.setItem('n',String(n))}catch(e){}},500)}
-function cloudLoad(){if(!CS){return}try{CS.getItem('n',(e,v)=>{const n=parseInt(v);if(e||!n){cloudReady=true;return}CS.getItems(Array.from({length:n},(_,k)=>'c'+k),(e2,r)=>{try{if(!e2){const x=JSON.parse(Array.from({length:n},(_,k)=>r['c'+k]).join(''));if(typeof x.b==='number'){Object.assign(S,x);shown=S.b;render()}}}catch(z){}cloudReady=true})})}catch(e){cloudReady=true}}
+function cloudLoad(){if(!CS){return}try{CS.getItem('n',(e,v)=>{const n=parseInt(v);if(e||!n){cloudReady=true;return}CS.getItems(Array.from({length:n},(_,k)=>'c'+k),(e2,r)=>{try{if(!e2){const x=JSON.parse(Array.from({length:n},(_,k)=>r['c'+k]).join(''));if(typeof x.b==='number'){Object.assign(S,x);syncNick();shown=S.b;render();pushScore()}}}catch(z){}cloudReady=true})})}catch(e){cloudReady=true}}
 const BG=new Audio('music.mp3');BG.loop=true;BG.volume=.35;BG.preload='auto';
 function musicSync(){try{if(S.mus&&!document.hidden){const p=BG.play();if(p&&p.catch)p.catch(()=>{})}else BG.pause()}catch(e){}}
 document.addEventListener('click',musicSync);document.addEventListener('visibilitychange',musicSync);
 const BC=[['#e11d2e','#4a0a10'],['#ff7a00','#6b2800'],['#2aa5ff','#0a2a5e'],['#3fae49','#0d3814'],['#8a5cf5','#25135e'],['#6b7bff','#0f1650']];
-try{const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user;if(u)S.nick=(u.username?'@'+u.username:(u.first_name||'Игрок')).replace(/[<>&"]/g,'').slice(0,32)||'Игрок'}catch(e){}
+function syncNick(){try{const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user;if(u)S.nick=(u.username?'@'+u.username:(u.first_name||'Игрок')).replace(/[<>&"]/g,'').slice(0,32)||'Игрок'}catch(e){}}
+syncNick();
 function banner(){const c=BC[S.bc]||BC[0],u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user,L=(S.nick.replace('@','')[0]||'И').toUpperCase();
 const av=u&&u.photo_url?`<img src="${u.photo_url}" alt="" referrerpolicy="no-referrer" data-l="${L}" onerror="this.outerHTML=this.dataset.l">`:L;
 const sl=[0,1,2].map(i=>{const it=S.inv.find(x=>x.id===S.bn[i]);return `<div class="sl ${it?'f':''}" ${it?`style="border-color:${TC[it.t]}"`:''} onclick="pickSlot(${i})">${it?it.e:'+'}</div>`}).join('');
