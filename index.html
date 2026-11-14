@@ -226,9 +226,9 @@ function render(){
 setBal();
 document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
 const key=tab+'|'+cur;$('#main').classList.toggle('still',key===lastKey);lastKey=key;
-$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView,pass:passView,jet:jetView})[tab]());
+$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView,pass:passView,jet:jetView,mk:mkView})[tab]());
 cd();if(tab==='jet')jetHist()}
-function casesView(){return `<div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:14px;text-align:left;background:linear-gradient(135deg,#1a0b3a,#e11d2e)" onclick="go('jet')"><span style="font-size:42px">🚀</span><div><div class="nm" style="font-size:19px">ДЖЕТ</div><div class="pr" style="color:#fff">Лети выше, лови иксы: небо → космос → стратосфера</div></div></div><h2>Кейсы</h2><div class="grid">`+C.map((c,i)=>{const lk=c.rk&&(S.rk||0)<c.rk;return `<div class="card" style="${lk?'opacity:.5':''}" onclick="view(${i})"><div class="pic">${c.e}</div><div class="nm">${c.n}</div><div class="pr">${lk?'🔒 Ранг «'+RK[c.rk-1].n+'»':c.p?'⭐ '+fmt(c.p):(c.d?'РАЗ В ДЕНЬ':'БЕСПЛАТНО')}</div></div>`}).join('')+'</div>'}
+function casesView(){return `<div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:14px;text-align:left;background:linear-gradient(135deg,#1a0b3a,#e11d2e)" onclick="go('jet')"><span style="font-size:42px">🚀</span><div><div class="nm" style="font-size:19px">ДЖЕТ</div><div class="pr" style="color:#fff">Лети выше, лови иксы: небо → космос → стратосфера</div></div></div><div class="grid" style="margin-bottom:12px"><div class="card" onclick="openMk(0)"><div style="font-size:32px">🛒</div><div class="nm">Рынок</div><div class="pr">Покупай и продавай</div></div><div class="card" onclick="openMk(2)"><div style="font-size:32px">🤝</div><div class="nm">Обмен</div><div class="pr">С друзьями</div></div></div><h2>Кейсы</h2><div class="grid">`+C.map((c,i)=>{const lk=c.rk&&(S.rk||0)<c.rk;return `<div class="card" style="${lk?'opacity:.5':''}" onclick="view(${i})"><div class="pic">${c.e}</div><div class="nm">${c.n}</div><div class="pr">${lk?'🔒 Ранг «'+RK[c.rk-1].n+'»':c.p?'⭐ '+fmt(c.p):(c.d?'РАЗ В ДЕНЬ':'БЕСПЛАТНО')}</div></div>`}).join('')+'</div>'}
 function caseView(){const c=C[cur],idle=[];for(let k=0;k<20;k++)idle.push(pick(c));
 return `<button class="btn g" style="margin:0 0 12px;padding:10px" onclick="back()">← Назад</button><h2>${c.e} ${c.n}</h2><div id="rouls"><div class="roul"><div class="strip" id="strip">${idle.map(cell).join('')}</div></div></div>${c.p?XS():''}<button class="btn" id="open" onclick="openCase()">${c.p?'Открыть'+(xn>1?' ×'+xn:'')+(c.p*Math.max(0,xn-tkOf(c))?' за ⭐ '+fmt(c.p*Math.max(0,xn-tkOf(c))):' по билету'):'Открыть бесплатно'}</button><p class="pr" style="text-align:center" id="cd">${c.p&&tkOf(c)?'Билетов на этот кейс: '+tkOf(c):''}</p><h2 style="margin-top:18px">Что внутри</h2><div class="grid4">`+c.i.map(x=>`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small><small>${x.w}%</small></div>`).join('')+'</div>'}
 function cd(){if(cur===null||busy)return;const c=C[cur];if(c.p)return;const b=$('#open'),t=$('#cd');if(!b||!t)return;const l=c.d?((S.dl||{})[c.n]===day()?midn()-Date.now():0):S.fr-Date.now(),s=Math.floor(l/1000),z=v=>String(v).padStart(2,'0');
@@ -256,7 +256,7 @@ document.body.appendChild(d);$('#mk').onclick=()=>d.remove();$('#ms').onclick=()
 function sell(id){const k=S.inv.findIndex(x=>x.id===id);if(k<0)return;S.b+=S.inv[k].p;S.inv.splice(k,1);qadd('sell',1);save();render()}
 function sellAll(){if(!S.inv.length)return;const t=S.inv.reduce((a,x)=>a+x.p,0);S.b+=t;qadd('sell',S.inv.length);S.inv=[];save();render();toast('Продано на ⭐ '+fmt(t))}
 function invView(){const tot=S.inv.reduce((a,x)=>a+x.p,0);
-return `<h2>Инвентарь</h2><p class="pr" style="margin:-6px 0 12px">Предметов: ${S.inv.length}, стоимость ⭐ ${fmt(tot)}</p>`+(S.inv.length?`<button class="btn g" style="margin:0 0 12px" onclick="sellAll()">Продать всё</button><div class="grid">`+S.inv.slice().reverse().map(x=>`<div class="card" style="border-color:${TC[x.t]}"><div class="pic">${x.e}</div><div class="nm">${x.n}${x.u?' ×'+x.u:''}</div><div class="pr">⭐ ${fmt(x.p)}</div><button class="btn" style="padding:10px;font-size:14px" onclick="sell(${x.id})">Продать</button></div>`).join('')+'</div>':'<div class="card" style="padding:30px"><div class="pic">📦</div><div class="pr">Здесь пусто. Открой первый кейс.</div></div>')}
+return `<h2>Инвентарь</h2><p class="pr" style="margin:-6px 0 12px">Предметов: ${S.inv.length}, стоимость ⭐ ${fmt(tot)}</p>`+(S.inv.length?`<button class="btn g" style="margin:0 0 12px" onclick="sellAll()">Продать всё</button><div class="grid">`+S.inv.slice().reverse().map(x=>`<div class="card" style="border-color:${TC[x.t]}"><div class="pic">${x.e}</div><div class="nm">${x.n}${x.u?' ×'+x.u:''}</div><div class="pr">⭐ ${fmt(x.p)}</div><button class="btn" style="padding:10px;font-size:14px" onclick="sell(${x.id})">Продать</button><button class="btn g" style="padding:10px;font-size:14px" onclick="listPrompt(${x.id})">На рынок</button></div>`).join('')+'</div>':'<div class="card" style="padding:30px"><div class="pic">📦</div><div class="pr">Здесь пусто. Открой первый кейс.</div></div>')}
 /* ===== Апгрейд и контракт ===== */
 let ut=0,us=[],tg=null;
 const usum=()=>us.reduce((a,id)=>{const x=S.inv.find(y=>y.id===id);return a+(x?x.p:0)},0);
@@ -443,5 +443,65 @@ function jetCash(){if(!J.run)return;J.run=0;busy=false;const w=Math.floor(J.b*J.
 $('#jm').style.color='#4ade80';$('#jz').textContent='Забрано +⭐ '+fmt(w-J.b);$('#jbtn').textContent='Запустить снова';save();setBal();jetHist();snd('win');toast('+⭐ '+fmt(w)+' 🚀')}
 function jetCrash(){J.run=0;busy=false;jetDraw();$('#rk').innerHTML='💥';$('#jm').style.color='#ff5a6b';$('#jz').textContent='Ракета взорвалась';$('#jbtn').textContent='Запустить снова';
 S.jh=(S.jh||[]).concat({m:J.m,w:0}).slice(-30);save();jetHist();snd('lose')}
+/* ===== РЫНОК И ОБМЕН ===== */
+let mt=0,MK=[],TR=[],ti=0,cdl=0;
+const nn=t=>String(t||'').trim().replace(/^@/,'').toLowerCase().slice(0,32);
+const iof=j=>{j=j||{};const n=String(j.n||'').replace(/[<>&"'`]/g,'').slice(0,60),c=CAT.find(x=>x.n===n);return{n,p:Math.max(0,Math.floor(+j.p)||0),t:Math.min(7,Math.max(0,Math.floor(+j.t)||0)),e:c?c.e:'🎁'}};
+const sb=(path,o)=>fetch(SB_URL+'/rest/v1/'+path,Object.assign({headers:Object.assign({Prefer:'return=representation'},sbH)},o)).then(r=>r.json());
+const jb=x=>JSON.stringify(x),mi=it=>({n:it.n,p:it.p,t:it.t});
+const addIt=j=>{const it=iof(j);S.inv.push({id:S.id++,e:it.e,n:it.n,p:it.p,t:it.t});return it};
+function openMk(k){if(busy)return;mt=k;go('mk')}
+function setMt(k){if(busy)return;mt=k;render()}
+function mkView(){setTimeout(mkLoad,0);return `<div class="mults" style="margin-bottom:14px"><button class="${mt==0?'on':''}" onclick="setMt(0)">Рынок</button><button class="${mt==1?'on':''}" onclick="setMt(1)">Мои лоты</button><button class="${mt==2?'on':''}" onclick="setMt(2)">Обмен</button></div><p class="pr" style="margin:-4px 0 12px">${mt==2?'Обмен для друзей: предложи подарок игроку по его нику, он выберет, что дать взамен.':'Цены ставят игроки. Комиссия 5% при продаже. Выставить подарок можно в Инвентаре.'}</p><div id="mkb"><p class="pr">Загрузка…</p></div>`}
+async function mkLoad(){const el=$('#mkb');if(!el)return;claimDel();
+try{if(mt<2){const L=await sb('market?status=eq.active&order=created_at.desc&limit=40'+(mt?'&seller_id=eq.'+S.uid:''));if(!Array.isArray(L))throw 0;MK=L;
+el.innerHTML=star(L.length?'<div class="grid">'+L.map((l,i)=>{const it=iof(l.item),me=l.seller_id===S.uid;return `<div class="card" style="border-color:${TC[it.t]}"><div class="pic">${it.e}</div><div class="nm">${it.n}</div><div class="pr">${esc(l.seller_nick||'')}</div><div class="nm" style="margin-top:4px">⭐ ${fmt(l.price)}</div><button class="btn" style="padding:10px;font-size:14px" onclick="${me?'mkCancel':'mkBuy'}(${i})">${me?'Снять':'Купить'}</button></div>`}).join('')+'</div>':'<p class="pr">Пока пусто. Выставь подарок из Инвентаря.</p>')}
+else{const [a,b]=await Promise.all([sb('trades?status=eq.pending&to_nick=eq.'+encodeURIComponent(nn(S.nick))),sb('trades?status=eq.pending&from_id=eq.'+S.uid)]);if(!Array.isArray(a)||!Array.isArray(b))throw 0;TR=a.concat(b);
+const row=(t,i)=>{const it=iof(t.item),inc=i<a.length;return `<div class="row" style="display:block"><div style="display:flex;align-items:center;gap:12px"><i class="pi">${it.e}</i><span style="flex:1;min-width:0">${it.n}<div class="pr">${inc?'От '+esc(t.from_nick||'игрока'):'Для @'+esc(t.to_nick)} · ⭐ ${fmt(it.p)}</div></span></div>${inc?`<button class="btn" style="padding:10px;font-size:14px" onclick="trChoose(${i})">Ответить</button>`:`<button class="btn g" style="padding:10px;font-size:14px" onclick="trCancel(${i})">Отменить</button>`}</div>`};
+el.innerHTML=star(`<h2>Предложить обмен</h2>${S.inv.length?'<div class="grid4" id="tinv">'+S.inv.map(x=>`<div class="mini ${x.id===ti?'sel':''}" data-id="${x.id}" onclick="trPick(${x.id})">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`).join('')+'</div>':'<p class="pr">Нет предметов.</p>'}<input id="tn" placeholder="Ник друга, например @durov" style="margin-top:12px;text-transform:none" autocomplete="off"><button class="btn" onclick="trSend()">Отправить предложение</button><h2 style="margin-top:20px">Входящие</h2>${a.length?a.map((t,i)=>row(t,i)).join(''):'<p class="pr">Нет предложений.</p>'}<h2 style="margin-top:20px">Мои предложения</h2>${b.length?b.map((t,i)=>row(t,a.length+i)).join(''):'<p class="pr">Нет активных.</p>'}`)}}
+catch(e){el.innerHTML='<p class="pr">Не удалось загрузить. Проверь интернет и что SQL в Supabase выполнен.</p>'}}
+function listPrompt(id){const it=S.inv.find(x=>x.id===id);if(!it||busy)return;const d=document.createElement('div');d.className='modal';
+d.innerHTML=star(`<div class="mbox" style="border-color:#e11d2e"><div class="pic" style="width:100px;height:100px">${it.e}</div><div class="nm" style="font-size:18px">${it.n}</div><div class="pr" style="margin:6px 0 10px">Цена в ⭐ (комиссия 5%)</div><input id="lp" type="number" inputmode="numeric" value="${Math.round(it.p)}"><button class="btn" id="lok">Выставить</button><button class="btn g" id="lcl">Отмена</button></div>`);
+document.body.appendChild(d);$('#lok').onclick=()=>{const v=+$('#lp').value;d.remove();mkList(id,v)};$('#lcl').onclick=()=>d.remove()}
+async function mkList(id,price){const k=S.inv.findIndex(x=>x.id===id);price=Math.floor(price);if(k<0||busy)return;if(!(price>=1&&price<=1e9))return toast('Неверная цена');
+const it=S.inv[k];busy=true;S.inv.splice(k,1);save();
+try{const r=await sb('market',{method:'POST',body:jb({seller_id:S.uid,seller_nick:S.nick,item:mi(it),price})});if(!Array.isArray(r)||!r.length)throw 0;toast('Лот выставлен на рынок')}catch(e){S.inv.splice(k,0,it);toast('Не вышло, подарок вернулся')}
+busy=false;save();render()}
+async function mkBuy(i){const l=MK[i];if(busy||!l||l.seller_id===S.uid)return;const pr=Math.floor(+l.price)||0;if(S.b<pr)return toast('Не хватает ⭐');
+busy=true;S.b-=pr;setBal();
+try{const r=await sb('market?id=eq.'+l.id+'&status=eq.active',{method:'PATCH',body:jb({status:'sold',buyer_id:S.uid})});
+if(!Array.isArray(r)||!r.length){S.b+=pr;toast('Лот уже купили или снят')}else{const it=addIt(l.item);await sb('deliveries',{method:'POST',body:jb({to_id:l.seller_id,stars:Math.floor(pr*.95),note:'Продан «'+it.n+'»'})});snd('win');toast('Куплено: '+it.n)}}
+catch(e){S.b+=pr;toast('Ошибка сети, ⭐ вернулись')}
+busy=false;save();render()}
+async function mkCancel(i){const l=MK[i];if(busy||!l)return;busy=true;
+try{const r=await sb('market?id=eq.'+l.id+'&seller_id=eq.'+S.uid+'&status=eq.active',{method:'PATCH',body:jb({status:'cancelled'})});if(Array.isArray(r)&&r.length){addIt(l.item);toast('Лот снят, подарок вернулся')}else toast('Лот уже продан')}catch(e){toast('Ошибка сети')}
+busy=false;save();render()}
+function trPick(id){ti=id;document.querySelectorAll('#tinv .mini').forEach(e=>e.classList.toggle('sel',+e.dataset.id===id))}
+async function trSend(){const to=nn($('#tn').value),k=S.inv.findIndex(x=>x.id===ti);if(busy)return;if(k<0)return toast('Выбери свой подарок');if(to.length<2)return toast('Введи ник друга');if(to===nn(S.nick))return toast('Нельзя себе');
+const it=S.inv[k];busy=true;S.inv.splice(k,1);ti=0;save();
+try{const r=await sb('trades',{method:'POST',body:jb({from_id:S.uid,from_nick:S.nick,to_nick:to,item:mi(it)})});if(!Array.isArray(r)||!r.length)throw 0;toast('Предложение отправлено')}catch(e){S.inv.splice(k,0,it);toast('Не вышло, подарок вернулся')}
+busy=false;save();render()}
+async function trCancel(i){const t=TR[i];if(busy||!t)return;busy=true;
+try{const r=await sb('trades?id=eq.'+t.id+'&from_id=eq.'+S.uid+'&status=eq.pending',{method:'PATCH',body:jb({status:'cancelled'})});if(Array.isArray(r)&&r.length){addIt(t.item);toast('Отменено, подарок вернулся')}else toast('Уже недоступно')}catch(e){toast('Ошибка сети')}
+busy=false;save();render()}
+function trChoose(i){const t=TR[i];if(busy||!t)return;const it=iof(t.item),d=document.createElement('div');d.className='modal';
+d.innerHTML=star(`<div class="mbox" style="border-color:#e11d2e"><div class="nm" style="font-size:18px">${esc(t.from_nick||'Игрок')} дарит ${it.n}</div><div class="pr" style="margin:6px 0 10px">Выбери свой подарок взамен или забери так</div>${S.inv.length?`<div class="grid4" style="max-height:34vh;overflow:auto">${S.inv.map(x=>`<div class="mini" data-id="${x.id}">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`).join('')}</div>`:''}<button class="btn" id="tg1">Принять в подарок</button><button class="btn w" id="tg2">Отклонить</button><button class="btn g" id="tg3">Закрыть</button></div>`);
+document.body.appendChild(d);d.querySelectorAll('.mini').forEach(e=>e.onclick=()=>{d.remove();trAccept(i,+e.dataset.id)});
+$('#tg1').onclick=()=>{d.remove();trAccept(i,0)};$('#tg2').onclick=()=>{d.remove();trDecline(i)};$('#tg3').onclick=()=>d.remove()}
+async function trAccept(i,myId){const t=TR[i];if(busy||!t)return;const k=myId?S.inv.findIndex(x=>x.id===myId):-1,give=k>=0?S.inv.splice(k,1)[0]:null;busy=true;
+try{const r=await sb('trades?id=eq.'+t.id+'&status=eq.pending',{method:'PATCH',body:jb({status:'done'})});
+if(!Array.isArray(r)||!r.length){if(give)S.inv.splice(k,0,give);toast('Предложение уже недоступно')}else{const it=addIt(t.item);if(give)await sb('deliveries',{method:'POST',body:jb({to_id:t.from_id,item:mi(give),note:'Обмен с '+S.nick})});snd('win');toast('Получено: '+it.n)}}
+catch(e){if(give)S.inv.splice(k,0,give);toast('Ошибка сети')}
+busy=false;save();render()}
+async function trDecline(i){const t=TR[i];if(busy||!t)return;busy=true;
+try{const r=await sb('trades?id=eq.'+t.id+'&status=eq.pending',{method:'PATCH',body:jb({status:'declined'})});if(Array.isArray(r)&&r.length){await sb('deliveries',{method:'POST',body:jb({to_id:t.from_id,item:t.item,note:S.nick+' отклонил обмен'})});toast('Отклонено')}}catch(e){toast('Ошибка сети')}
+busy=false;render()}
+async function claimDel(){if(cdl||busy||(CS&&!cloudReady))return;cdl=1;const got=[];
+try{const L=await sb('deliveries?to_id=eq.'+S.uid+'&claimed=eq.false&limit=20');
+if(Array.isArray(L))for(const d of L){if(busy)break;const r=await sb('deliveries?id=eq.'+d.id+'&claimed=eq.false',{method:'PATCH',body:jb({claimed:true})});
+if(Array.isArray(r)&&r.length){if(d.item)addIt(d.item);S.b+=Math.max(0,Math.floor(+d.stars)||0);got.push(d.note||'Доставка')}}
+if(got.length){save();setBal();toast('Пришло: '+got.slice(0,2).join(', ')+(got.length>2?' и ещё '+(got.length-2):''));if(!busy&&(tab==='inv'||tab==='mk'))render()}}catch(e){}
+cdl=0}
+setTimeout(claimDel,3000);setInterval(claimDel,15000);
 render();cloudLoad();pushScore();
 </script></body></html>
