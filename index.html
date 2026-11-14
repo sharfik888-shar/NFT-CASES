@@ -136,7 +136,7 @@ C.forEach(c=>{c.e=box(c.n);c.i.forEach(x=>x.e=em(x.e,x.img,x.n))});
 const P={START:500,RED:1000,BLACK:1000,PEPE:777,DUROV:2000,SNOOP:420,HELLO:666,MOON:1500,WINTER:1500,BEACH:1000};
 let S={b:1000,inv:[],used:[],fr:0,id:1,sel:null,m:2,nick:'Игрок',o:0,sp:0,best:0,snd:true,vib:true,mus:true},tab='cases',cur=null,busy=false,tt;
 try{const x=JSON.parse(localStorage.getItem('nftc'));if(x&&typeof x.b==='number')S=Object.assign(S,x)}catch(e){}
-const save=()=>{try{localStorage.setItem('nftc',JSON.stringify(S))}catch(e){}cloudSave()};
+const save=()=>{try{localStorage.setItem('nftc',JSON.stringify(S))}catch(e){}cloudSave();pushScore()};
 function toast(t){const e=$('#toast');e.innerHTML=star(t);e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2300)}
 function pick(c){let r=Math.random()*100;for(const x of c.i){r-=x.w;if(r<0)return x}return c.i[0]}
 const cell=x=>`<div class="cell" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`;
@@ -217,6 +217,17 @@ function modalMany(its){const d=document.createElement('div');d.className='modal
 d.innerHTML=star(`<div class="mbox" style="border-color:#e11d2e;max-height:88vh;overflow:auto"><div class="nm" style="font-size:18px;margin-bottom:10px">Выпало подарков: ${its.length}</div><div class="grid4">${its.map(x=>`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`).join('')}</div><button class="btn" id="mk">Забрать все</button><button class="btn w" id="ms">Продать все за ⭐ ${fmt(tot)}</button></div>`);
 document.body.appendChild(d);$('#mk').onclick=()=>d.remove();
 $('#ms').onclick=()=>{its.forEach(x=>{const k=S.inv.findIndex(y=>y.id===x.id);if(k>=0){S.b+=S.inv[k].p;S.inv.splice(k,1)}});S.sel=null;save();render();d.remove()}}
-function topView(){const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);return '<h2>Топ игроков</h2><p class="pr" style="margin:-6px 0 12px">По стоимости баланса и предметов</p>'+topList(v)}
-render();cloudLoad();
+function topView(){setTimeout(loadTop,0);return '<h2>Топ игроков</h2><p class="pr" style="margin:-6px 0 12px">По стоимости баланса и предметов</p><div id="toplist"><p class="pr">Загрузка…</p></div>'}
+/* SUPABASE: вставь сюда Project URL и anon public key */
+const SB_URL='',SB_KEY='';
+if(!S.uid)S.uid=(TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user)?'tg'+TG.initDataUnsafe.user.id:'w'+Math.random().toString(36).slice(2)+Date.now().toString(36);
+const esc=t=>String(t).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
+const sbH={apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json'};
+let st2;
+function pushScore(){if(!SB_URL)return;clearTimeout(st2);st2=setTimeout(()=>{const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);fetch(SB_URL+'/rest/v1/players?on_conflict=id',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates,return=minimal'},sbH),body:JSON.stringify({id:S.uid,nick:S.nick,score:Math.round(v)})}).catch(()=>{})},1500)}
+async function loadTop(){const el=$('#toplist');if(!el)return;const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);
+if(!SB_URL){el.innerHTML=star(topList(v));return}
+try{const r=await fetch(SB_URL+'/rest/v1/players?select=id,nick,score&order=score.desc&limit=20',{headers:sbH});const L=await r.json();if(!Array.isArray(L))throw 0;
+el.innerHTML=star(L.map((x,i)=>`<div class="top ${x.id===S.uid?'me':''}"><b>${i+1}</b><span>${esc(x.nick)}${x.id===S.uid?' (ты)':''}</span>⭐ ${fmt(x.score)}</div>`).join('')||'<p class="pr">Пока никого нет</p>');pushScore()}catch(e){el.innerHTML=star(topList(v))}}
+render();cloudLoad();pushScore();
 </script></body></html>
