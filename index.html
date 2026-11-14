@@ -2,6 +2,7 @@
 <html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>NFT Cases</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
 :root{color-scheme:dark;--bg:#0a0a0a;--card:#151515;--line:#2a2a2a;--red:#e11d2e;--w:#fff;--mut:#8d8d8d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
@@ -133,7 +134,7 @@ C.forEach(c=>{c.e=box(c.n);c.i.forEach(x=>x.e=em(x.e,x.img,x.n))});
 const P={START:500,RED:1000,BLACK:1000,PEPE:777,DUROV:2000,SNOOP:420,HELLO:666,MOON:1500,WINTER:1500,BEACH:1000};
 let S={b:1000,inv:[],used:[],fr:0,id:1,sel:null,m:2,nick:'Игрок',o:0,sp:0,best:0,snd:true,vib:true},tab='cases',cur=null,busy=false,tt;
 try{const x=JSON.parse(localStorage.getItem('nftc'));if(x&&typeof x.b==='number')S=Object.assign(S,x)}catch(e){}
-const save=()=>{try{localStorage.setItem('nftc',JSON.stringify(S))}catch(e){}};
+const save=()=>{try{localStorage.setItem('nftc',JSON.stringify(S))}catch(e){}cloudSave()};
 function toast(t){const e=$('#toast');e.innerHTML=star(t);e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2300)}
 function pick(c){let r=Math.random()*100;for(const x of c.i){r-=x.w;if(r<0)return x}return c.i[0]}
 const cell=x=>`<div class="cell" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`;
@@ -192,13 +193,19 @@ const lvl=()=>Math.floor(S.o/5)+1;
 const sw=(k,t)=>`<div class="row" onclick="tog('${k}')"><span>${t}</span><i class="sw ${S[k]?'on':''}"></i></div>`;
 function tog(k){S[k]=!S[k];save();render()}
 function setNick(v){S.nick=v.replace(/[<>&"]/g,'').trim().slice(0,14)||'Игрок';save();render()}
-function resetAll(){if(!confirm('Сбросить весь прогресс?'))return;try{localStorage.removeItem('nftc')}catch(e){}location.reload()}
+function resetAll(){if(!confirm('Сбросить весь прогресс?'))return;try{localStorage.removeItem('nftc')}catch(e){}try{CS&&CS.setItem('n','0')}catch(e){}setTimeout(()=>location.reload(),500)}
 function topList(v){const L=[['CryptoKing',250000],['NFT_Master',120000],['Pepe_Lord',64000],['SnoopFan',31000],['Dubai_Whale',17500],['Newbie',4200],[S.nick,v,1]].sort((a,b)=>b[1]-a[1]);
 return '<div>'+L.map((x,i)=>`<div class="top ${x[2]?'me':''}"><b>${i+1}</b><span>${x[2]?x[0]+' (ты)':x[0]}</span>⭐ ${fmt(x[1])}</div>`).join('')+'</div>'}
 function profView(){const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);
 return `<div class="card prof"><div class="ava">${S.nick[0].toUpperCase()}</div><div style="flex:1"><input value="${S.nick}" maxlength="14" onchange="setNick(this.value)" style="text-transform:none;padding:10px"><div class="pr" style="margin-top:6px">Уровень ${lvl()}</div></div></div>
 <h2>Статистика</h2><div class="grid"><div class="card"><div class="nm">${S.o}</div><div class="pr">Открыто кейсов</div></div><div class="card"><div class="nm">⭐ ${fmt(S.best)}</div><div class="pr">Лучший дроп</div></div><div class="card"><div class="nm">⭐ ${fmt(S.sp)}</div><div class="pr">Потрачено</div></div><div class="card"><div class="nm">⭐ ${fmt(v)}</div><div class="pr">Богатство</div></div></div>
 <h2 style="margin-top:20px">Топ игроков</h2>${topList(v)}
-<h2 style="margin-top:20px">Настройки</h2>${sw('snd','Звук')}${sw('vib','Вибрация')}<button class="btn g" onclick="resetAll()">Сбросить прогресс</button>`}
-render();
+<h2 style="margin-top:20px">Настройки</h2>${sw('snd','Звук')}${sw('vib','Вибрация')}<button class="btn" onclick="exportSave()">Скопировать код прогресса</button><button class="btn g" onclick="importSave()">Загрузить прогресс по коду</button><p class="pr" style="margin:10px 2px">Если после выхода из игры всё пропадает, скопируй код и сохрани в заметках. В следующий раз загрузи его здесь.</p><button class="btn g" onclick="resetAll()">Сбросить прогресс</button>`}
+function exportSave(){const c=btoa(unescape(encodeURIComponent(JSON.stringify(S))));const ok=()=>toast('Код скопирован. Сохрани его в заметках');(navigator.clipboard&&navigator.clipboard.writeText?navigator.clipboard.writeText(c):Promise.reject()).then(ok).catch(()=>{prompt('Скопируй код прогресса:',c)})}
+function importSave(){const c=prompt('Вставь код прогресса');if(!c)return;try{const x=JSON.parse(decodeURIComponent(escape(atob(c.trim()))));if(typeof x.b!=='number')throw 0;Object.assign(S,x);save();render();toast('Прогресс загружен')}catch(e){toast('Неверный код')}}
+const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage;let ct,cloudReady=false;
+if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor('#0a0a0a');TG.setBackgroundColor&&TG.setBackgroundColor('#0a0a0a')}catch(e){}}
+function cloudSave(){if(!CS||!cloudReady)return;clearTimeout(ct);ct=setTimeout(()=>{try{const j=JSON.stringify(S),n=Math.ceil(j.length/3500);for(let k=0;k<n;k++)CS.setItem('c'+k,j.slice(k*3500,(k+1)*3500));CS.setItem('n',String(n))}catch(e){}},500)}
+function cloudLoad(){if(!CS){return}try{CS.getItem('n',(e,v)=>{const n=parseInt(v);if(e||!n){cloudReady=true;return}CS.getItems(Array.from({length:n},(_,k)=>'c'+k),(e2,r)=>{try{if(!e2){const x=JSON.parse(Array.from({length:n},(_,k)=>r['c'+k]).join(''));if(typeof x.b==='number'){Object.assign(S,x);shown=S.b;render()}}}catch(z){}cloudReady=true})})}catch(e){cloudReady=true}}
+render();cloudLoad();
 </script></body></html>
