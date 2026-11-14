@@ -297,11 +297,11 @@ const BG=new Audio('music.mp3');BG.loop=true;BG.volume=.35;BG.preload='auto';
 function musicSync(){try{if(S.mus&&!document.hidden){const p=BG.play();if(p&&p.catch)p.catch(()=>{})}else BG.pause()}catch(e){}}
 document.addEventListener('click',musicSync);document.addEventListener('visibilitychange',musicSync);
 const BC=[['#e11d2e','#4a0a10'],['#ff7a00','#6b2800'],['#2aa5ff','#0a2a5e'],['#3fae49','#0d3814'],['#8a5cf5','#25135e'],['#6b7bff','#0f1650']];
-try{const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user;if(u)S.nick=(u.username||u.first_name||'Игрок').replace(/[<>&"]/g,'').slice(0,14)||'Игрок'}catch(e){}
-function banner(){const c=BC[S.bc]||BC[0],u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user,L=(S.nick[0]||'И').toUpperCase();
+try{const u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user;if(u)S.nick=(u.username?'@'+u.username:(u.first_name||'Игрок')).replace(/[<>&"]/g,'').slice(0,32)||'Игрок'}catch(e){}
+function banner(){const c=BC[S.bc]||BC[0],u=TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user,L=(S.nick.replace('@','')[0]||'И').toUpperCase();
 const av=u&&u.photo_url?`<img src="${u.photo_url}" alt="" referrerpolicy="no-referrer" data-l="${L}" onerror="this.outerHTML=this.dataset.l">`:L;
 const sl=[0,1,2].map(i=>{const it=S.inv.find(x=>x.id===S.bn[i]);return `<div class="sl ${it?'f':''}" ${it?`style="border-color:${TC[it.t]}"`:''} onclick="pickSlot(${i})">${it?it.e:'+'}</div>`}).join('');
-return `<div class="bnr" style="background:linear-gradient(135deg,${c[0]},${c[1]})"><div class="slots">${sl}</div></div><div class="who"><div class="ava2">${av}</div><div style="flex:1;min-width:0"><div style="font-size:22px;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(u&&u.username?'@'+u.username:S.nick)}</div><div class="pr" style="margin-top:4px">Уровень ${lvl()}${S.rk?' · '+RK[S.rk-1].n:''}</div></div></div><div class="dots">${BC.map((x,i)=>`<i class="dot ${i===S.bc?'on':''}" style="background:linear-gradient(135deg,${x[0]},${x[1]})" onclick="setBC(${i})"></i>`).join('')}</div>`}
+return `<div class="bnr" style="background:linear-gradient(135deg,${c[0]},${c[1]})"><div class="slots">${sl}</div></div><div class="who"><div class="ava2">${av}</div><div style="flex:1;min-width:0"><div style="font-size:22px;font-weight:900;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(S.nick)}</div><div class="pr" style="margin-top:4px">Уровень ${lvl()}${S.rk?' · '+RK[S.rk-1].n:''}</div></div></div><div class="dots">${BC.map((x,i)=>`<i class="dot ${i===S.bc?'on':''}" style="background:linear-gradient(135deg,${x[0]},${x[1]})" onclick="setBC(${i})"></i>`).join('')}</div>`}
 function setBC(i){S.bc=i;save();render()}
 function pickSlot(i){if(busy)return;const used=S.bn.filter(Boolean),L=S.inv.filter(x=>!used.includes(x.id)||x.id===S.bn[i]);
 const d=document.createElement('div');d.className='modal';
@@ -328,7 +328,7 @@ let st2;
 function pushScore(){if(!SB_URL)return;clearTimeout(st2);st2=setTimeout(()=>{const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);fetch(SB_URL+'/rest/v1/players?on_conflict=id',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates,return=minimal'},sbH),body:JSON.stringify({id:S.uid,nick:S.nick,score:Math.round(v)})}).catch(()=>{})},1500)}
 async function loadTop(){const el=$('#toplist');if(!el)return;const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);
 if(!SB_URL){el.innerHTML=star(topList(v));return}
-try{const r=await fetch(SB_URL+'/rest/v1/players?select=id,nick,score&order=score.desc&limit=20',{headers:sbH});const L=await r.json();if(!Array.isArray(L))throw 0;
-el.innerHTML=star(L.map((x,i)=>`<div class="top ${x.id===S.uid?'me':''}"><b>${i+1}</b><span>${esc(x.nick)}${x.id===S.uid?' (ты)':''}</span>⭐ ${fmt(x.score)}</div>`).join('')||'<p class="pr">Пока никого нет</p>');pushScore()}catch(e){el.innerHTML=star(topList(v))}}
+try{const r=await fetch(SB_URL+'/rest/v1/players?select=id,nick,score&id=like.tg*&nick=neq.'+encodeURIComponent('Игрок')+'&order=score.desc&limit=20',{headers:sbH});const L=await r.json();if(!Array.isArray(L))throw 0;
+el.innerHTML=star(L.map((x,i)=>`<div class="top ${x.id===S.uid?'me':''}"><b>${i+1}</b><span>${esc(x.id===S.uid?S.nick:x.nick)}${x.id===S.uid?' (ты)':''}</span>⭐ ${fmt(x.score)}</div>`).join('')||'<p class="pr">Пока никого нет</p>');pushScore()}catch(e){el.innerHTML=star(topList(v))}}
 render();cloudLoad();pushScore();
 </script></body></html>
