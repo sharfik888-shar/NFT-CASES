@@ -188,6 +188,8 @@ nav .ev.on{color:#fff}
 </nav>
 <div id="toast"></div>
 <script>
+window.addEventListener('error',function(e){var m=document.getElementById('main');if(m)m.innerHTML='<div style="padding:16px;color:#ff8a8a;font:13px monospace;word-break:break-all">ОШИБКА: '+String(e.message)+'<br>строка '+e.lineno+':'+e.colno+'</div>'});
+window.addEventListener('unhandledrejection',function(e){var m=document.getElementById('main');if(m&&!m.children.length)m.innerHTML='<div style="padding:16px;color:#ff8a8a;font:13px monospace">ОШИБКА: '+String(e.reason)+'</div>'});
 const STAR='<svg class="st" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#ffc22e"/><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8z" fill="#fff" opacity=".22"/></svg>';const star=h=>h.replace(/⭐(?![^<]*>)/g,STAR);const $=s=>document.querySelector(s),fmt=n=>Math.round(n).toLocaleString('ru-RU');
 const F=[.3,.5,.8,1,1.5,4,15,60],W=[41,28,16,8.5,4,1.5,.7,.3],W2=[41.25,28,16,8.5,4,1.5,.7,.05],TC=['#444','#555','#777','#aaa','#ff6b6b','#ff2d3d','#e11d2e','#fff'];
 const C=[
@@ -625,8 +627,3 @@ try{const r=await sb('trades?id=eq.'+t.id+'&status=eq.pending',{method:'PATCH',b
 busy=false;render()}
 async function claimDel(){if(cdl||busy||(CS&&!cloudReady))return;cdl=1;const got=[];
 try{const L=await sb('deliveries?to_id=eq.'+S.uid+'&claimed=eq.false&limit=20');
-if(Array.isArray(L))for(const d of L){if(busy)break;const r=await sb('deliveries?id=eq.'+d.id+'&claimed=eq.false',{method:'PATCH',body:jb({claimed:true})});
-if(Array.isArray(r)&&r.length){if(d.item)addIt(d.item);S.b+=Math.max(0,Math.floor(+d.stars)||0);got.push(d.note||'Доставка')}}
-if(got.length){save();setBal();toast('Пришло: '+got.slice(0,2).join(', ')+(got.length>2?' и ещё '+(got.length-2):''));if(!busy&&(tab==='inv'||tab==='mk'))render()}}catch(e){}
-cdl=0}
-setTimeout(claimDel,30
