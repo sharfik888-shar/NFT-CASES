@@ -676,5 +676,22 @@ return `<div class="snowbox" style="background:linear-gradient(160deg,#1a0b3a,#5
 <h2>🎡 Колесо призов</h2><div class="card"><div style="position:relative;width:260px;height:260px;margin:14px auto"><div style="position:absolute;left:50%;top:-8px;margin-left:-10px;z-index:3;border:10px solid transparent;border-top:20px solid #fff;border-bottom:0"></div><div id="wh" style="position:relative;width:100%;height:100%;border-radius:50%;background:${bg};border:4px solid #fff;box-shadow:0 0 24px rgba(225,29,46,.45);transition:transform 5s cubic-bezier(.12,.8,.18,1)">${lab}</div></div><div class="pr">Призы: 💎250, 💎500, 💎1 000, 💎2 000 и лимитированный Гучи Пепе ⭐ 400 000 (один на игрока)</div><button class="btn" onclick="gSpin()">${free?'Крутить бесплатно (раз в день)':'Крутить за 💎 '+fmt(GSPIN)}</button></div>
 <h2 style="margin-top:20px">Кейсы за гемы</h2><div class="grid">${GC.map((c,i)=>`<div class="card" style="border-color:#5cbcff" onclick="gInfo(${i})"><div class="pic">${box(c.n)}</div><div class="nm">${c.n}</div><div class="pr">💎 ${fmt(c.g)}</div></div>`).join('')}</div><div style="height:18px"></div>`}
 const _evView=evView;evView=function(){return gemHtml()+_evView()};
+/* ===== МЕНЮ + ПРОМОКОДЫ + ШАНСЫ ===== */
+Object.assign(P,{STAR100:100,GIFT100K:100000,MEGA10M:10000000});
+const WN=[30,27,20,12,6,3.5,1.1,.4],WN2=[30,27,20,12,6,3.5,1.44,.06];
+C.forEach(c=>{if(c.d)return;c.i.forEach((x,k)=>x.w=(c.p>=400?WN2:WN)[k])});
+const MG=['pass','top','prof','promo','mk','col','jet'];
+function menuView(){
+const it=[['pass','🎯','Пасс и задания','Награды и XP'],['promo','🎟️','Промокоды','Бонусные ⭐'],['mk','🛒','Рынок и обмен','Торговля'],['jet','🚀','Джет','Лови иксы'],['col','📚','Коллекция','Собери всё'],['top','🏆','Топ','Рейтинг'],['prof','👤','Профиль','Статистика и ранги']];
+return '<h2>Меню</h2><div class="grid">'+it.map(x=>`<div class="card" onclick="go('${x[0]}')"><div class="pic">${x[1]}</div><div class="nm">${x[2]}</div><div class="pr">${x[3]}</div></div>`).join('')+'</div>'}
+{const nav=document.querySelector('nav');['pass','top','prof'].forEach(t=>nav.querySelector('button[data-t="'+t+'"]').remove());
+const b=document.createElement('button');b.dataset.t='menu';b.onclick=()=>go('menu');
+b.innerHTML='<i><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></i>Меню';nav.appendChild(b)}
+promoView=function(){return `<button class="btn g" style="margin:0 0 12px;padding:10px" onclick="go('menu')">← Меню</button><h2>🎟️ Промокоды</h2><input id="pi" placeholder="Введи промокод" autocomplete="off" autocapitalize="characters"><button class="btn" onclick="promo()">Активировать</button><p class="pr" style="margin-top:12px">Каждый код можно использовать один раз.</p>`};
+render=function(){setBal();const g=MG.includes(tab)?'menu':tab;
+document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===g));
+const key=tab+'|'+cur;$('#main').classList.toggle('still',key===lastKey);lastKey=key;
+$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView,pass:passView,jet:jetView,mk:mkView,ev:evView,col:colView,menu:menuView})[tab]());
+cd();if(tab==='jet')jetHist()};
 render();cloudLoad();pushScore();
 </script></body></html>
