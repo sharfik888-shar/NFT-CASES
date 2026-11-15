@@ -623,5 +623,57 @@ if(Array.isArray(r)&&r.length){if(d.item)addIt(d.item);S.b+=Math.max(0,Math.floo
 if(got.length){save();setBal();toast('Пришло: '+got.slice(0,2).join(', ')+(got.length>2?' и ещё '+(got.length-2):''));if(!busy&&(tab==='inv'||tab==='mk'))render()}}catch(e){}
 cdl=0}
 setTimeout(claimDel,3000);setInterval(claimDel,15000);
+/* ===== ГЕМ-ИВЕНТ (20 дней): гемы за минуты, колесо, кейсы за гемы ===== */
+/* ВСТАВЬ ЭТОТ БЛОК ПЕРЕД ПОСЛЕДНЕЙ СТРОКОЙ:  render();cloudLoad();pushScore(); */
+const GEND=new Date('2026-12-05T23:59:59').getTime(),GPM=20,GSPIN=1000;
+S.gm=S.gm||0;S.gs=S.gs||0;
+const gl=()=>GEND-Date.now();
+const gI=(n,p,w)=>({e:CAT.find(x=>x.n===n).e,n,p,w,t:p>=1e5?7:p>=3e4?6:p>=1e4?5:p>=3e3?4:p>=1e3?3:p>=300?2:1});
+const GC=[
+{n:'Кристалл',g:100,i:[gI('Мороженое',150,30),gI('Леденец',300,26),gI('Бенгальский огонь',600,18),gI('Сакура',1000,13),gI('Персик',1800,8),gI('Часы',3000,4),gI('Лампа джинна',6000,1)]},
+{n:'Сапфир',g:500,i:[gI('Печатка',1500,28),gI('Браслет',2500,24),gI('Цилиндр',4000,18),gI('Мини-Оскар',6000,13),gI('Героический шлем',9000,9),gI('Кепка Дурова',15000,5),gI('Поцелованная лягушка',30000,2.5),gI('Плюш Пепе',60000,.5)]},
+{n:'Рубин',g:1000,i:[gI('Хрустальный шар',5000,30),gI('Ион-кристалл',9000,24),gI('Лунный кулон',15000,18),gI('Мешок добычи',25000,13),gI('Кольцо с бриллиантом',40000,9),gI('Снуп Догг',80000,4.5),gI('Плюш Пепе',150000,1.5)]},
+{n:'Алмаз',g:5000,i:[gI('Мешок добычи',40000,28),gI('Кольцо с бриллиантом',80000,26),gI('Снуп Догг',140000,20),gI('Плюш Пепе',220000,15),gI('Лампа джинна',300000,8),gI('Сердце-медальон',350000,3)]}
+];
+Object.assign(CC,{'Кристалл':['#9be3ff','#1b4f9c'],'Сапфир':['#5c7cff','#1a2a8f'],'Рубин':['#ff5a6b','#8f1020'],'Алмаз':['#e8e8ff','#6a4cc9']});
+Object.assign(SY,{'Кристалл':'<path d="M50 56l12 12-12 14-12-14z"/>','Сапфир':'<path d="M50 56l12 12-12 14-12-14z"/>','Рубин':'<path d="M50 56l12 12-12 14-12-14z"/>','Алмаз':'<path d="M50 56l12 12-12 14-12-14z"/>'});
+function gPick(c){let r=Math.random()*100;for(const x of c.i){r-=x.w;if(r<0)return x}return c.i[0]}
+function gUp(){const b=$('#gbal');if(b)b.textContent='💎 '+fmt(S.gm);const v=$('#gv');if(v)v.textContent=fmt(S.gm);const p=$('#gprog');if(p)p.style.width=(S.gs/60*100)+'%'}
+{const g=document.createElement('div');g.className='bal';g.id='gbal';g.style.cssText='border-color:#5cbcff;box-shadow:0 0 14px rgba(92,188,255,.3);padding:8px 10px;font-size:14px';g.onclick=()=>go('ev');document.querySelector('header').insertBefore(g,$('#bal'));gUp()}
+/* 20 гемов за каждую минуту, проведённую в игре (вкладка открыта) */
+setInterval(()=>{if(document.hidden||gl()<=0)return;S.gs++;if(S.gs>=60){S.gs=0;S.gm+=GPM;save();if(!busy)toast('+'+GPM+' 💎 за минуту в игре')}gUp()},1000);
+/* Колесо */
+const WS=[250,500,250,1000,250,500,2000,0],WC=['#e11d2e','#1a1a1a'];
+function wPick(){const r=Math.random()*100;if(r<.1&&!S.gp)return 0;return r<45?250:r<75?500:r<92?1000:2000}
+function gSpin(){if(busy)return;if(gl()<=0)return toast('Ивент завершён');const free=S.gw!==day();
+if(!free&&S.gm<GSPIN)return toast('Не хватает 💎 на ещё один прокрут');
+const v=wPick(),ks=WS.map((x,k)=>x===v?k:-1).filter(k=>k>=0),k=ks[Math.floor(Math.random()*ks.length)];
+if(free)S.gw=day();else S.gm-=GSPIN;busy=true;save();gUp();
+$('#wh').style.transform='rotate('+(360*6-(k*45+22.5)+(Math.random()*30-15))+'deg)';
+const tk=[];for(let j=0;j<22;j++)tk.push(setTimeout(()=>snd('tick'),200+j*j*9));
+setTimeout(()=>{busy=false;let it=null;
+if(v===0){S.gp=1;it={id:S.id++,e:'<span class="bgi" style="background:radial-gradient(circle at 50% 35%,#ffd34d,#a85d00)">'+em('🐸',base+'plushpepe-1000.webp','Гучи Пепе')+'</span>',n:'Гучи Пепе',p:400000,t:7};S.inv.push(it);pushDrop(it,'Колесо')}
+else S.gm+=v;
+save();render();snd('win');if(it)modal(it);else toast('+'+fmt(v)+' 💎 🎡')},5300)}
+/* Кейсы за гемы */
+function gInfo(i){if(busy)return;const c=GC[i],d=document.createElement('div');d.className='modal';
+d.innerHTML=star(`<div class="mbox" style="border-color:#5cbcff"><div class="nm" style="font-size:18px">Кейс «${c.n}»</div><div class="pr" style="margin:4px 0 10px">Цена 💎 ${fmt(c.g)}</div><div class="grid4" style="max-height:40vh;overflow:auto">${c.i.map(x=>`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small><small>${x.w}%</small></div>`).join('')}</div><button class="btn" id="go1" ${S.gm>=c.g?'':'style="opacity:.5"'}>Открыть</button><button class="btn g" id="go2">Закрыть</button></div>`);
+document.body.appendChild(d);$('#go1').onclick=()=>{d.remove();gOpen(i)};$('#go2').onclick=()=>d.remove()}
+function gOpen(i){const c=GC[i];if(busy)return;if(gl()<=0)return toast('Ивент завершён');if(S.gm<c.g)return toast('Не хватает 💎: копи по минутам или крути колесо');
+busy=true;S.gm-=c.g;const win=gPick(c),arr=[];for(let k=0;k<40;k++)arr.push(k===34?win:gPick(c));
+const it={id:S.id++,e:win.e,n:win.n,p:win.p,t:win.t};S.inv.push(it);S.best=Math.max(S.best,win.p);if(win.p>=300)pushDrop(it,'Гем-ивент');save();gUp();
+const d=document.createElement('div');d.className='modal';d.innerHTML=star('<div style="width:100%;max-width:420px"><div class="roul"><div class="strip" id="gst"></div></div><div class="nm" style="text-align:center;margin-top:12px">Открываем «'+c.n+'»…</div></div>');
+document.body.appendChild(d);const st=d.querySelector('#gst');st.innerHTML=star(arr.map(cell).join(''));
+const x=-(34*100+50)+st.parentElement.clientWidth/2+(Math.random()*60-30);st.getBoundingClientRect();st.style.transition='transform 4.6s cubic-bezier(.12,.8,.18,1)';st.style.transform='translate3d('+x+'px,0,0)';
+for(let k=0;k<22;k++)setTimeout(()=>snd('tick'),200+k*k*8);
+setTimeout(()=>{d.remove();busy=false;render();snd('win');modal(it)},5000)}
+function gemHtml(){const L=gl(),dd=Math.ceil(L/864e5),free=S.gw!==day();
+if(L<=0)return '<div class="snowbox" style="background:linear-gradient(160deg,#1a0b3a,#5a2bd6)"><div style="font-size:22px;font-weight:900">💎 Гем-ивент завершён</div></div><div style="height:18px"></div>';
+const lab=WS.map((v,k)=>`<span style="position:absolute;left:50%;top:50%;font-weight:900;font-size:${v?15:24}px;transform:translate(-50%,-50%) rotate(${k*45+22.5}deg) translateY(-92px)">${v?'💎'+v:'🐸'}</span>`).join('');
+const bg='conic-gradient('+WS.map((v,k)=>(v?WC[k%2]:'#c98a00')+' '+k*45+'deg '+(k+1)*45+'deg').join(',')+')';
+return `<div class="snowbox" style="background:linear-gradient(160deg,#1a0b3a,#5a2bd6 60%,#9be3ff)"><div style="font-size:22px;font-weight:900">💎 Гем-ивент</div><div class="pr" style="color:#e6f4ff;margin-top:4px">До конца: ${dd} дн.</div><div style="margin-top:12px;font-weight:800">Твои гемы: 💎 <span id="gv">${fmt(S.gm)}</span></div><div class="bar"><i id="gprog" style="width:${S.gs/60*100}%"></i></div><div class="pr" style="color:#e6f4ff">+${GPM} 💎 за каждую минуту в игре</div></div>
+<h2>🎡 Колесо призов</h2><div class="card"><div style="position:relative;width:260px;height:260px;margin:14px auto"><div style="position:absolute;left:50%;top:-8px;margin-left:-10px;z-index:3;border:10px solid transparent;border-top:20px solid #fff;border-bottom:0"></div><div id="wh" style="position:relative;width:100%;height:100%;border-radius:50%;background:${bg};border:4px solid #fff;box-shadow:0 0 24px rgba(225,29,46,.45);transition:transform 5s cubic-bezier(.12,.8,.18,1)">${lab}</div></div><div class="pr">Призы: 💎250, 💎500, 💎1 000, 💎2 000 и лимитированный Гучи Пепе ⭐ 400 000 (один на игрока)</div><button class="btn" onclick="gSpin()">${free?'Крутить бесплатно (раз в день)':'Крутить за 💎 '+fmt(GSPIN)}</button></div>
+<h2 style="margin-top:20px">Кейсы за гемы</h2><div class="grid">${GC.map((c,i)=>`<div class="card" style="border-color:#5cbcff" onclick="gInfo(${i})"><div class="pic">${box(c.n)}</div><div class="nm">${c.n}</div><div class="pr">💎 ${fmt(c.g)}</div></div>`).join('')}</div><div style="height:18px"></div>`}
+const _evView=evView;evView=function(){return gemHtml()+_evView()};
 render();cloudLoad();pushScore();
 </script></body></html>
