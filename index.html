@@ -150,6 +150,29 @@ nav i{transition:transform .25s}
 @keyframes fl{50%{transform:scaleY(1.4)}}
 .hist{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;min-height:30px}
 .hist b{flex:none;padding:5px 10px;border-radius:99px;font-size:12px;background:var(--card);border:1px solid var(--line)}
+.pic:has(.bgi){border-radius:20%;background:none}
+.pic .bgi{width:100%;height:100%;border-radius:20%;padding:0}
+.bgi{display:inline-grid;place-items:center;border-radius:14px;padding:0;overflow:hidden}
+.bgi img{-webkit-mask-image:none!important;mask-image:none!important;transform:none!important}
+.mini .bgi{width:100%;aspect-ratio:1}.cell .bgi{width:66px;height:66px}
+.pi .bgi,.fi .bgi,.sl .bgi{width:100%;height:100%}.slot .bgi{width:64px;height:64px}
+nav .ev{position:relative;margin-top:-24px;color:#bfe8ff}
+nav .ev i{width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 50% 30%,#9be3ff,#2a7fd6 70%);box-shadow:0 0 18px rgba(90,190,255,.75),inset 0 0 8px rgba(255,255,255,.5);border:2px solid #dff5ff;transform:none!important;animation:evp 2.4s ease-in-out infinite}
+nav .ev svg{stroke:#fff;filter:none!important;width:28px;height:28px}
+nav .ev.on{color:#fff}
+@keyframes evp{50%{box-shadow:0 0 30px rgba(120,210,255,.95),inset 0 0 8px rgba(255,255,255,.5)}}
+.snowbox{position:relative;overflow:hidden;border-radius:20px;background:linear-gradient(160deg,#0f2a4a,#1d5aa6 60%,#7cc8ff);padding:18px;margin-bottom:14px}
+.snowbox::before,.snowbox::after{content:"";position:absolute;inset:0;background-image:radial-gradient(3px 3px at 20px 30px,#fff,transparent),radial-gradient(2px 2px at 80px 90px,#fff,transparent),radial-gradient(3px 3px at 150px 50px,#fff,transparent),radial-gradient(2px 2px at 220px 120px,#fff,transparent),radial-gradient(3px 3px at 290px 20px,#fff,transparent);background-size:320px 160px;animation:snowf 7s linear infinite;opacity:.85}
+.snowbox::after{background-size:240px 120px;animation-duration:11s;opacity:.5}
+@keyframes snowf{to{background-position:0 160px}}
+.snowbox>*{position:relative;z-index:1}
+.dbn{display:flex;gap:6px;margin:10px 0}.dd{flex:1;text-align:center;padding:8px 0;border-radius:10px;background:#0d0d0d;border:1px solid var(--line);font-size:11px;color:var(--mut);line-height:1.4}.dd.done{background:var(--red);border-color:var(--red);color:#fff}.dd.now{border-color:#fff;color:#fff;animation:wglow 2s infinite}
+/* ===== фикс: фон NFT заливает всю плитку ===== */
+.bgi{border-radius:inherit}
+.pic .bgi img,.mini .bgi img,.slot .bgi img,.sl .bgi img,.pi .bgi img,.fi .bgi img{width:86%;height:86%}
+.cell:has(.bgi){padding:0;overflow:hidden}
+.cell .bgi{width:100%;height:100%;border-radius:10px}
+.cell .bgi img{width:60px;height:60px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 <header><div class="logo">NFT <b>CASES</b></div><div class="bal" id="bal">⭐ 0</div></header>
@@ -158,10 +181,10 @@ nav i{transition:transform .25s}
 <button data-t="cases" onclick="go('cases')"><i><svg viewBox="0 0 24 24"><path d="M12 3 3 7.5v9L12 21l9-4.5v-9L12 3z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></svg></i>Кейсы</button>
 <button data-t="pass" onclick="go('pass')"><i><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-6-4-6 4z"/><path d="M9 9l2 2 4-4"/></svg></i>Пасс</button>
 <button data-t="up" onclick="go('up')"><i><svg viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6"/><path d="M7 20h10"/></svg></i>Апгрейд</button>
+<button data-t="ev" class="ev" onclick="go('ev')"><i><svg viewBox="0 0 24 24"><path d="M12 2v20M4.5 6.5l15 11M19.5 6.5l-15 11M9 3.5l3 2 3-2M9 20.5l3-2 3 2"/></svg></i>Ивент</button>
 <button data-t="inv" onclick="go('inv')"><i><svg viewBox="0 0 24 24"><path d="M6 8h12l1 12H5L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></i>Инвентарь</button>
 <button data-t="top" onclick="go('top')"><i><svg viewBox="0 0 24 24"><path d="M8 4h8v5a4 4 0 0 1-8 0V4z"/><path d="M8 6H5v2a3 3 0 0 0 3 3M16 6h3v2a3 3 0 0 1-3 3M12 13v4M8 20h8"/></svg></i>Топ</button>
 <button data-t="prof" onclick="go('prof')"><i><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></i>Профиль</button>
-<button data-t="promo" onclick="go('promo')"><i><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4V8z"/><path d="M14 6v12" stroke-dasharray="2 2"/></svg></i>Промо</button>
 </nav>
 <div id="toast"></div>
 <script>
@@ -188,7 +211,10 @@ const C=[
 {n:'Пасхальный',e:'🐣',p:240,i:[['🥚','Пасхальное яйцо','easteregg'],['🌸','Сакура','sakuraflower'],['🐰','Желейный зайка','jellybunny'],['🧁','Кролик-маффин','bunnymuffin'],['💐','Букет роз','lushbouquet'],['🍑','Персик','preciouspeach'],['🎁','Джек в коробке','jackinthebox'],['🐸','Плюш Пепе','plushpepe']]},
 {n:'Рыцарь',e:'⚔️',p:550,i:[['🥇','Медаль победы','victorymedal'],['🗡️','Световой меч','lightsword'],['🪖','Героический шлем','heroichelmet'],['💍','Печатка','signetring'],['💪','Могучая рука','mightyarm'],['📿','Браслет','nailbracelet'],['🏆','Мини-Оскар','minioscar'],['🧢','Кепка Дурова','durovscap']]},
 {n:'Рок-н-ролл',e:'🎸',p:420,i:[['🎧','Mood Pack','moodpack'],['💿','Проигрыватель','recordplayer'],['🎒','Swag Bag','swagbag'],['🚬','Винтажная сигара','vintagecigar'],['💪','Могучая рука','mightyarm'],['⚡','Электро-череп','electricskull'],['💰','Мешок добычи','lootbag'],['🐶','Снуп Догг','snoopdogg']]},
-{n:'Сокровища',e:'🏴‍☠️',p:800,i:[['💰','Мешок добычи','lootbag'],['🥇','Медаль победы','victorymedal'],['💍','Обручальное кольцо','bondedring'],['🔮','Хрустальный шар','crystalball'],['🧞','Лампа джинна','genielamp'],['❤️','Сердце-медальон','heartlocket'],['🪐','Астральный осколок','astralshard'],['💍','Кольцо с бриллиантом','diamondring']]}
+{n:'Сокровища',e:'🏴‍☠️',p:800,i:[['💰','Мешок добычи','lootbag'],['🥇','Медаль победы','victorymedal'],['💍','Обручальное кольцо','bondedring'],['🔮','Хрустальный шар','crystalball'],['🧞','Лампа джинна','genielamp'],['❤️','Сердце-медальон','heartlocket'],['🪐','Астральный осколок','astralshard'],['💍','Кольцо с бриллиантом','diamondring']]},
+{n:'Снежный',e:'⛄',p:300,ev:1,i:[['🧤','Варежки','snowmittens'],['🍬','Леденцовая трость','candycane'],['🍪','Имбирное печенье','gingercookie'],['🔔','Бубенцы','jinglebells'],['🧦','Новогодний носок','xmasstocking'],['🎄','Зимний венок','winterwreath'],['🎅','Шапка Санты','santahat'],['🔮','Снежный шар','snowglobe']]},
+{n:'Новогодний',e:'🎆',p:600,ev:1,i:[['🕯️','Свеча','bdaycandle'],['📅','Настольный календарь','deskcalendar'],['🍷','Пряное вино','spicedwine'],['🍰','Домашний торт','homemadecake'],['🎇','Бенгальский огонь','partysparkler'],['🎁','Джек в коробке','jackinthebox'],['🎈','Большой год','bigyear'],['🎅','Шапка Санты','santahat']]},
+{n:'Ледяной',e:'🧊',p:1200,ev:1,i:[['❄️','Варежки','snowmittens'],['🔮','Снежный шар','snowglobe'],['🎄','Зимний венок','winterwreath'],['💎','Ион-кристалл','iongem'],['🌟','Висячая звезда','hangingstar'],['🪐','Астральный осколок','astralshard'],['🌙','Лунный кулон','moonpendant'],['🎅','Шапка Санты','santahat']]}
 ];
 const base='https://nft.fragment.com/gift/';
 C.forEach(c=>c.i=c.i.map((x,k)=>({e:x[0],n:x[1],img:base+x[2]+'-1000.webp',p:c.pp?c.pp[k]:Math.round(c.p*(k==7&&c.p>=400?300:F[k])),w:(c.p>=400?W2:W)[k],t:k})));
@@ -201,7 +227,7 @@ mk('Мастер',2,[['🪖','Героический шлем','heroichelmet',10
 mk('Дуров VIP',3,[['💍','Кольцо с бриллиантом','diamondring',3000],['🧢','Кепка Дурова','durovscap',5000],['🌙','Лунный кулон','moonpendant',10000]]);
 mk('Админ',4,[['⌚','Часы','swisswatch',3000],['🧞','Лампа джинна','genielamp',10000],['🐸','Плюш Пепе','plushpepe',20000]]);
 const em=(e,u,n)=>`<img src="${u}" alt="${n}" decoding="async" referrerpolicy="no-referrer" onerror="this.outerHTML=this.dataset.e" data-e="${e}">`;
-const CC={'Хэллоуин':['#ffa63d','#d94f00'],'Бесплатный':['#ff5a6b','#b3101f'],'Пляжный':['#4fd7ff','#0086b3'],'Дурова':['#5cbcff','#1666c9'],'Плюш Пепе':['#6fd878','#1f8a2e'],'Снуп Дог':['#b48bff','#5b2fc9'],'Лунный':['#8f9bff','#3a45c4'],'Зимний':['#bdeaff','#4aa6d6'],'Элита':['#d1d5db','#4b5563'],'Мастер':['#2dd4a7','#0b5e49'],'Дуров VIP':['#a78bfa','#4c1d95'],'Админ':['#ffd34d','#a85d00'],'Любовь':['#ff6fa5','#b3135a'],'Магия':['#9d6bff','#3b1a8f'],'День рождения':['#ffb84d','#d9480f'],'Космос':['#6b7bff','#0f1650'],'Аниме':['#ff8fc7','#8f1d6b'],'Миллионер':['#ffd34d','#a85d00'],'Ужасы':['#8a8a8a','#1c1c1c'],'Зверинец':['#7ad06b','#2a6a1f'],'Сладости':['#ff9ecb','#c2185b'],'Пасхальный':['#c3a6ff','#5a3bb0'],'Рыцарь':['#b0bec5','#37474f'],'Рок-н-ролл':['#ff5a3d','#7a1409'],'Сокровища':['#ffc84d','#7a4a00']};
+const CC={'Хэллоуин':['#ffa63d','#d94f00'],'Бесплатный':['#ff5a6b','#b3101f'],'Пляжный':['#4fd7ff','#0086b3'],'Дурова':['#5cbcff','#1666c9'],'Плюш Пепе':['#6fd878','#1f8a2e'],'Снуп Дог':['#b48bff','#5b2fc9'],'Лунный':['#8f9bff','#3a45c4'],'Зимний':['#bdeaff','#4aa6d6'],'Элита':['#d1d5db','#4b5563'],'Мастер':['#2dd4a7','#0b5e49'],'Дуров VIP':['#a78bfa','#4c1d95'],'Админ':['#ffd34d','#a85d00'],'Снежный':['#bdeaff','#2a7fd6'],'Новогодний':['#ff6b6b','#8f1d1d'],'Ледяной':['#9be3ff','#1b4f9c'],'Любовь':['#ff6fa5','#b3135a'],'Магия':['#9d6bff','#3b1a8f'],'День рождения':['#ffb84d','#d9480f'],'Космос':['#6b7bff','#0f1650'],'Аниме':['#ff8fc7','#8f1d6b'],'Миллионер':['#ffd34d','#a85d00'],'Ужасы':['#8a8a8a','#1c1c1c'],'Зверинец':['#7ad06b','#2a6a1f'],'Сладости':['#ff9ecb','#c2185b'],'Пасхальный':['#c3a6ff','#5a3bb0'],'Рыцарь':['#b0bec5','#37474f'],'Рок-н-ролл':['#ff5a3d','#7a1409'],'Сокровища':['#ffc84d','#7a4a00']};
 const SY={
 'Хэллоуин':'<path d="M50 60c-10-3-17 4-17 11s7 11 17 8c10 3 17-1 17-8s-7-14-17-11z"/><path d="M50 60q0-6 5-8" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>',
 'Бесплатный':'<path d="M50 80C37 71 37 59 44 59c3 0 5 2 6 4 1-2 3-4 6-4 7 0 7 12-6 21z"/>',
@@ -214,7 +240,7 @@ const SY={
 'Элита':'<path d="M50 56l12 12-12 14-12-14z"/>',
 'Мастер':'<path d="M50 56l4 9 10 1-8 6 3 10-9-6-9 6 3-10-8-6 10-1z"/>',
 'Дуров VIP':'<path d="M36 70l28-11-9 22-5-9z"/><circle cx="62" cy="60" r="3"/>',
-'Админ':'<path d="M34 80l-3-18 11 8 8-12 8 12 11-8-3 18z"/>'};
+'Снежный':'<path d="M50 57v24M39 63l22 12M61 63L39 75" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>','Новогодний':'<path d="M50 56l4 9 10 1-8 6 3 10-9-6-9 6 3-10-8-6 10-1z"/>','Ледяной':'<path d="M50 56l12 12-12 14-12-14z"/>','Админ':'<path d="M34 80l-3-18 11 8 8-12 8 12 11-8-3 18z"/>'};
 let bi=0;
 const box=n=>{const [a,b]=CC[n]||['#ff5a6b','#b3101f'],id='g'+(bi++);
 return `<svg class="bx" viewBox="0 0 100 100"><defs><linearGradient id="${id}b" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><linearGradient id="${id}l" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".25" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><radialGradient id="${id}r"><stop offset="0" stop-color="${a}" stop-opacity=".55"/><stop offset="1" stop-color="${a}" stop-opacity="0"/></radialGradient></defs><circle cx="50" cy="55" r="48" fill="url(#${id}r)"/><ellipse cx="50" cy="91" rx="34" ry="4.5" fill="#000" opacity=".55"/><rect x="16" y="46" width="68" height="42" rx="7" fill="url(#${id}b)"/><rect x="16" y="76" width="68" height="12" rx="6" fill="#000" opacity=".25"/><rect x="11" y="27" width="78" height="25" rx="7" fill="url(#${id}l)"/><rect x="11" y="45" width="78" height="4" fill="#000" opacity=".28"/><rect x="43" y="44" width="14" height="11" rx="3" fill="#fff"/><circle cx="50" cy="50" r="2.4" fill="${b}"/><g transform="translate(0,4)" fill="#fff" opacity=".95">${SY[n]||''}</g><circle cx="22" cy="35" r="1.6" fill="#fff" opacity=".8"/><circle cx="78" cy="33" r="1.1" fill="#fff" opacity=".8"/></svg>`};
@@ -224,20 +250,21 @@ const CAT=[];C.forEach(c=>{if(!c.d)c.i.forEach(x=>{if(!CAT.some(y=>y.n===x.n&&y.
 const P={START:500,RED:1000,BLACK:1000,PEPE:777,DUROV:2000,SNOOP:420,HELLO:666,MOON:1500,WINTER:1500,BEACH:1000,GALAXY3M:3000000,ROCKET3M:3000000,STRATO3M:3000000};
 let S={b:1000,inv:[],used:[],fr:0,id:1,sel:null,m:2,nick:'Игрок',o:0,sp:0,best:0,snd:true,vib:true,mus:true,bn:[0,0,0],bc:0,rk:0,dl:{},xp:0,pc:{},tk:{},ua:0,uw:0,ct:0,jm:0,jh:[],jbet:100,q:{dk:'',wk:'',d:{},cd:{},w:{},cw:{}}},tab='cases',cur=null,busy=false,tt;
 try{const x=JSON.parse(localStorage.getItem('nftc'));if(x&&typeof x.b==='number')S=Object.assign(S,x)}catch(e){}
-const save=()=>{try{localStorage.setItem('nftc',JSON.stringify(S))}catch(e){}cloudSave();pushScore()};
+const save=()=>{S.col=S.col||{};S.cbg=S.cbg||{};for(const x of S.inv){S.col[x.n]=1;if(x.bg!=null)S.cbg[x.bg]=1}try{localStorage.setItem('nftc',JSON.stringify(S))}catch(e){}cloudSave();pushScore()};
 function toast(t){const e=$('#toast');e.innerHTML=star(t);e.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>e.classList.remove('show'),2300)}
 function pick(c){let r=Math.random()*100;for(const x of c.i){r-=x.w;if(r<0)return x}return c.i[0]}
 const cell=x=>`<div class="cell" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`;
 function go(t){if(busy)return toast('Подожди, идёт открытие…');tab=t;cur=null;render()}
-function view(i){if(busy)return;const c=C[i];if(c.rk&&(S.rk||0)<c.rk)return toast('Нужен ранг «'+RK[c.rk-1].n+'». Купи его в профиле');cur=i;render();scrollTo(0,0)}
+function view(i){if(busy)return;const c=C[i];if(c.ev&&Date.now()>EV_END)return toast('Ивент завершён');if(c.rk&&(S.rk||0)<c.rk)return toast('Нужен ранг «'+RK[c.rk-1].n+'». Купи его в профиле');cur=i;render();scrollTo(0,0)}
 function back(){if(busy)return;cur=null;render()}
 function render(){
+S.inv.forEach(x=>{if(x.bg!=null){const c=CAT.find(y=>y.n===x.n);if(c)x.e=bgE(c.e,x.bg)}});
 setBal();
 document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
 const key=tab+'|'+cur;$('#main').classList.toggle('still',key===lastKey);lastKey=key;
-$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView,pass:passView,jet:jetView,mk:mkView})[tab]());
+$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView,pass:passView,jet:jetView,mk:mkView,ev:evView,col:colView})[tab]());
 cd();if(tab==='jet')jetHist()}
-function casesView(){setTimeout(loadFeed,0);return `<div class="feed" id="feed">${feedHtml()}</div><div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:14px;text-align:left;background:linear-gradient(135deg,#1a0b3a,#e11d2e)" onclick="go('jet')"><span style="font-size:42px">🚀</span><div><div class="nm" style="font-size:19px">ДЖЕТ</div><div class="pr" style="color:#fff">Лети выше, лови иксы: небо → космос → стратосфера</div></div></div><div class="grid" style="margin-bottom:12px"><div class="card" onclick="openMk(0)"><div style="font-size:32px">🛒</div><div class="nm">Рынок</div><div class="pr">Покупай и продавай</div></div><div class="card" onclick="openMk(2)"><div style="font-size:32px">🤝</div><div class="nm">Обмен</div><div class="pr">С друзьями</div></div></div><h2>Кейсы</h2><div class="grid">`+C.map((c,i)=>{const lk=c.rk&&(S.rk||0)<c.rk;return `<div class="card" style="${lk?'opacity:.5':''}" onclick="view(${i})"><div class="pic">${c.e}</div><div class="nm">${c.n}</div><div class="pr">${lk?'🔒 Ранг «'+RK[c.rk-1].n+'»':c.p?'⭐ '+fmt(c.p):(c.d?'РАЗ В ДЕНЬ':'БЕСПЛАТНО')}</div></div>`}).join('')+'</div>'}
+function casesView(){setTimeout(loadFeed,0);return `<div class="feed" id="feed">${feedHtml()}</div>${bonusHtml()}<div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:14px;text-align:left;background:linear-gradient(135deg,#1a0b3a,#e11d2e)" onclick="go('jet')"><span style="font-size:42px">🚀</span><div><div class="nm" style="font-size:19px">ДЖЕТ</div><div class="pr" style="color:#fff">Лети выше, лови иксы: небо → космос → стратосфера</div></div></div><div class="grid" style="margin-bottom:12px;grid-template-columns:repeat(3,1fr);gap:8px"><div class="card" onclick="go('col')"><div style="font-size:30px">📚</div><div class="nm">Коллекция</div><div class="pr">Собери всё</div></div><div class="card" onclick="openMk(0)"><div style="font-size:32px">🛒</div><div class="nm">Рынок</div><div class="pr">Торговля</div></div><div class="card" onclick="openMk(2)"><div style="font-size:32px">🤝</div><div class="nm">Обмен</div><div class="pr">С друзьями</div></div></div><h2>Кейсы</h2><div class="grid">`+C.map((c,i)=>{if(c.ev)return '';const lk=c.rk&&(S.rk||0)<c.rk;return `<div class="card" style="${lk?'opacity:.5':''}" onclick="view(${i})"><div class="pic">${c.e}</div><div class="nm">${c.n}</div><div class="pr">${lk?'🔒 Ранг «'+RK[c.rk-1].n+'»':c.p?'⭐ '+fmt(c.p):(c.d?'РАЗ В ДЕНЬ':'БЕСПЛАТНО')}</div></div>`}).join('')+'</div>'}
 function caseView(){const c=C[cur],idle=[];for(let k=0;k<20;k++)idle.push(pick(c));
 return `<button class="btn g" style="margin:0 0 12px;padding:10px" onclick="back()">← Назад</button><h2>${c.e} ${c.n}</h2><div id="rouls"><div class="roul"><div class="strip" id="strip">${idle.map(cell).join('')}</div></div></div>${c.p?XS():''}<button class="btn" id="open" onclick="openCase()">${c.p?'Открыть'+(xn>1?' ×'+xn:'')+(c.p*Math.max(0,xn-tkOf(c))?' за ⭐ '+fmt(c.p*Math.max(0,xn-tkOf(c))):' по билету'):'Открыть бесплатно'}</button><p class="pr" style="text-align:center" id="cd">${c.p&&tkOf(c)?'Билетов на этот кейс: '+tkOf(c):''}</p><h2 style="margin-top:18px">Что внутри</h2><div class="grid4">`+c.i.map(x=>`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small><small>${x.w}%</small></div>`).join('')+'</div>'}
 function cd(){if(cur===null||busy)return;const c=C[cur];if(c.p)return;const b=$('#open'),t=$('#cd');if(!b||!t)return;const l=c.d?((S.dl||{})[c.n]===day()?midn()-Date.now():0):S.fr-Date.now(),s=Math.floor(l/1000),z=v=>String(v).padStart(2,'0');
@@ -254,7 +281,7 @@ function runOpen(c,n,used){
 used=used||0;busy=true;S.b-=c.p*(n-used);if(used)S.tk[c.n]-=used;if(c.d){S.dl=S.dl||{};S.dl[c.n]=day()}else if(c.p===0)S.fr=Date.now()+300000;
 const its=[],arrs=[];
 for(let j=0;j<n;j++){const win=pick(c),arr=[];for(let k=0;k<40;k++)arr.push(k===34?win:pick(c));const it={id:S.id++,e:win.e,n:win.n,p:win.p,t:win.t};S.inv.push(it);S.o++;S.sp+=j<n-used?c.p:0;S.best=Math.max(S.best,win.p);its.push(it);arrs.push(arr)}
-qadd('open',n);qadd('spend',c.p*(n-used));qadd('drop',Math.max(...its.map(x=>x.p)));its.filter(x=>x.p>=300).slice(0,5).forEach(x=>pushDrop(x,c.n));save();setBal();{const o=$('#open');o.textContent='Пропустить ⏩';o.onclick=skipOpen}
+qadd('open',n);qadd('spend',c.p*(n-used));qadd('drop',Math.max(...its.map(x=>x.p)));its.filter(x=>x.p>=300).slice(0,5).forEach(x=>pushDrop(x,c.n));wroll();S.ws=(S.ws||0)+its.reduce((a,x)=>a+x.p,0);if(c.ev)evAdd(n,c.p*(n-used),Math.max(...its.map(x=>x.p)));save();setBal();{const o=$('#open');o.textContent='Пропустить ⏩';o.onclick=skipOpen}
 const bx=$('#rouls');bx.innerHTML=arrs.map(()=>'<div class="roul"><div class="strip"></div></div>').join('');
 bx.querySelectorAll('.strip').forEach((st,j)=>{st.innerHTML=star(arrs[j].map(cell).join(''));const x=-(34*100+50)+st.parentElement.clientWidth/2+(Math.random()*60-30);st.getBoundingClientRect();st.style.transition='transform '+(5+j*.3)+'s cubic-bezier(.12,.8,.18,1)';st.style.transform='translate3d('+x+'px,0,0)'});
 const tks=[];for(let k=0;k<24;k++)tks.push(setTimeout(()=>snd('tick'),250+k*k*8));
@@ -298,7 +325,7 @@ function doCt(){if(busy||us.length<3)return;const sum=usum(),ids=us.slice();cons
 const el=$('#cres');busy=true;$('#upb').disabled=true;
 const iv=setInterval(()=>{el.innerHTML=CAT[Math.floor(Math.random()*CAT.length)].e;snd('tick')},90);
 setTimeout(()=>{clearInterval(iv);busy=false;S.inv=S.inv.filter(x=>!ids.includes(x.id));us=[];S.ct=(S.ct||0)+1;const it={id:S.id++,e:t.e,n:t.n,p:t.p,t:t.t};S.inv.push(it);save();render();snd('win');modal(it)},2600)}
-function promoView(){return `<h2>Промокоды</h2><input id="pi" placeholder="Введи промокод" autocomplete="off" autocapitalize="characters"><button class="btn" onclick="promo()">Активировать</button>`}
+function promoView(){return `<button class="btn g" style="margin:0 0 12px;padding:10px" onclick="go('prof')">← Назад</button><h2>Промокоды</h2><input id="pi" placeholder="Введи промокод" autocomplete="off" autocapitalize="characters"><button class="btn" onclick="promo()">Активировать</button>`}
 function promo(){const v=$('#pi').value.trim().toUpperCase();if(!v)return toast('Введи промокод');
 if(!P.hasOwnProperty(v))return toast('Такого промокода нет ❌');
 if(S.used.includes(v))return toast('Этот код уже использован');
@@ -372,13 +399,13 @@ const ttl=v=>TI.find(x=>v>=x[1]);
 const wealth=()=>S.b+S.inv.reduce((a,x)=>a+x.p,0);
 const hue=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%BC.length;return BC[h]};
 const avt=(n,sz,ph)=>{const c=hue(n);return `<span class="ta" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz*.45)}px;background:linear-gradient(135deg,${c[0]},${c[1]})">${esc((String(n).replace('@','')[0]||'?').toUpperCase())}${/^https:\/\//.test(ph||'')?`<img src="${esc(ph)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>`};
-function topHtml(L,v){
+function topHtml(L,v,wk){
 L=L.slice();if(!L.some(x=>x.id===S.uid))L.push({id:S.uid,nick:S.nick,score:v});L.sort((a,b)=>b.score-a.score);
-const mi=L.findIndex(x=>x.id===S.uid),lead=L[0].score||1,N=x=>x.id===S.uid?S.nick:x.nick,me=L[mi],t=ttl(v),PH=x=>x.id===S.uid?((tgUser()||{}).photo_url||x.photo):x.photo;
+const mi=L.findIndex(x=>x.id===S.uid),lead=L[0].score||1,N=x=>x.id===S.uid?S.nick:x.nick,me=L[mi],t=wk?['Неделя','#6cc6ff']:ttl(v),PH=x=>x.id===S.uid?((tgUser()||{}).photo_url||x.photo):x.photo;
 const pod=[1,0,2].map(k=>{const x=L[k];if(!x)return '<div class="pd"></div>';const h=[104,80,62][k],cl=['linear-gradient(#ffd34d,#a85d00)','linear-gradient(#e5e7eb,#6b7280)','linear-gradient(#f59e5b,#8a3d0a)'][k];
 return `<div class="pd">${k==0?'<div class="crown">👑</div>':''}${avt(N(x),k==0?64:52,PH(x))}<div class="nm pn">${esc(N(x))}</div><div class="pr">⭐ ${fmt(x.score)}</div><div class="pdb" style="height:${h}px;background:${cl}">${k+1}</div></div>`}).join('');
 const gap=mi>0?'До #'+mi+' осталось ⭐ '+fmt(L[mi-1].score-v+1):'Ты лидер! 👑';
-const rows=L.map((x,i)=>i<3?'':`<div class="top ${x.id===S.uid?'me':''}"><b>${i+1}</b>${avt(N(x),38,PH(x))}<div class="tn"><div>${esc(N(x))}${x.id===S.uid?' (ты)':''}</div><div class="pr" style="color:${ttl(x.score)[2]}">${ttl(x.score)[0]}</div><div class="bar" style="margin-top:6px;height:4px"><i style="width:${Math.max(3,x.score/lead*100)}%"></i></div></div><div class="sc">⭐ ${fmt(x.score)}</div></div>`).join('');
+const rows=L.map((x,i)=>i<3?'':`<div class="top ${x.id===S.uid?'me':''}"><b>${i+1}</b>${avt(N(x),38,PH(x))}<div class="tn"><div>${esc(N(x))}${x.id===S.uid?' (ты)':''}</div>${wk?`<div class="pr" style="color:#6cc6ff">${i<10?prz(i+1).t:'Без приза'}</div>`:`<div class="pr" style="color:${ttl(x.score)[2]}">${ttl(x.score)[0]}</div>`}<div class="bar" style="margin-top:6px;height:4px"><i style="width:${Math.max(3,x.score/lead*100)}%"></i></div></div><div class="sc">⭐ ${fmt(x.score)}</div></div>`).join('');
 return `<div class="me-card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="nm" style="font-size:16px">Твоё место #${mi+1}</div><span class="chip" style="color:${t[2]}">${t[0]}</span></div><div class="pr" style="margin-top:6px">${gap}</div></div><div class="pod">${pod}</div>${rows}`}
 function topList(v){return topHtml([['CryptoKing',250000],['NFT_Master',120000],['Pepe_Lord',64000],['SnoopFan',31000],['Dubai_Whale',17500],['Gift_Hunter',9800],['Newbie',4200],['Lucky_Sam',2100],['Case_Fan',900]].map((x,i)=>({id:'b'+i,nick:x[0],score:x[1]})),v)}
 /* ===== Профиль ===== */
@@ -386,7 +413,7 @@ const ACH=[['🎁','Первый кейс',()=>S.o>=1],['📦','50 кейсов'
 function profView(){const v=wealth(),t=ttl(v),na=ACH.filter(a=>a[2]()).length;
 return `${banner()}
 <div class="card" style="text-align:left;margin-bottom:14px"><div style="display:flex;justify-content:space-between;align-items:center"><span class="chip" style="color:${t[2]}">${t[0]}</span><div class="nm">Уровень ${lvl()}</div></div><div class="bar"><i style="width:${S.o%5*20}%"></i></div><div class="pr">Ещё ${5-S.o%5} кейсов до уровня ${lvl()+1}</div></div>
-<h2>Статистика</h2><div class="grid"><div class="card"><div class="nm">${S.o}</div><div class="pr">Открыто кейсов</div></div><div class="card"><div class="nm">⭐ ${fmt(S.best)}</div><div class="pr">Лучший дроп</div></div><div class="card"><div class="nm">⭐ ${fmt(S.sp)}</div><div class="pr">Потрачено</div></div><div class="card"><div class="nm">⭐ ${fmt(v)}</div><div class="pr">Богатство</div></div><div class="card"><div class="nm">${S.uw||0}/${S.ua||0}</div><div class="pr">Апгрейды (победы)</div></div><div class="card"><div class="nm">${(S.jm||0).toFixed(2)}x</div><div class="pr">Рекорд в Джете</div></div></div>
+${colRow()}<h2>Статистика</h2><div class="grid"><div class="card"><div class="nm">${S.o}</div><div class="pr">Открыто кейсов</div></div><div class="card"><div class="nm">⭐ ${fmt(S.best)}</div><div class="pr">Лучший дроп</div></div><div class="card"><div class="nm">⭐ ${fmt(S.sp)}</div><div class="pr">Потрачено</div></div><div class="card"><div class="nm">⭐ ${fmt(v)}</div><div class="pr">Богатство</div></div><div class="card"><div class="nm">${S.uw||0}/${S.ua||0}</div><div class="pr">Апгрейды (победы)</div></div><div class="card"><div class="nm">${(S.jm||0).toFixed(2)}x</div><div class="pr">Рекорд в Джете</div></div></div>
 <h2 style="margin-top:20px">Достижения ${na}/${ACH.length}</h2><div class="g3">${ACH.map(a=>`<div class="ach ${a[2]()?'on':''}"><i>${a[0]}</i><small>${a[1]}</small></div>`).join('')}</div>
 ${rkView()}<h2 style="margin-top:20px">Настройки</h2>${sw('fast','Без анимации кейсов')}${sw('mus','Музыка')}${sw('snd','Звук')}${sw('vib','Вибрация')}<button class="btn g" onclick="resetAll()">Сбросить прогресс</button><p class="pr" style="margin:10px 2px">v7 · Telegram: ${tgUser()?esc(tgUser().username?'@'+tgUser().username:'юзернейма нет'):'не определён'}</p>`}
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage;let ct,cloudReady=false;
@@ -420,7 +447,6 @@ function modalMany(its){const d=document.createElement('div');d.className='modal
 d.innerHTML=star(`<div class="mbox" style="border-color:#e11d2e"><div class="nm" style="font-size:18px;margin-bottom:10px">Выпало подарков: ${its.length}</div><div class="grid4">${its.map(x=>`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>⭐ ${fmt(x.p)}</small></div>`).join('')}</div><button class="btn" id="mk">Забрать все</button><button class="btn w" id="ms">Продать все за ⭐ ${fmt(tot)}</button></div>`);
 document.body.appendChild(d);$('#mk').onclick=()=>d.remove();
 $('#ms').onclick=()=>{its.forEach(x=>{const k=S.inv.findIndex(y=>y.id===x.id);if(k>=0){S.b+=S.inv[k].p;S.inv.splice(k,1);qadd('sell',1)}});save();render();d.remove()}}
-function topView(){setTimeout(loadTop,0);return '<h2>🏆 Топ игроков</h2><p class="pr" style="margin:-6px 0 12px">По стоимости баланса и предметов</p><div id="toplist"><p class="pr">Загрузка…</p></div>'}
 /* SUPABASE: вставь сюда Project URL и anon public key */
 const SB_URL='https://qmzhoihcxzhawqkbqgiv.supabase.co',SB_KEY='sb_publishable_nJx_YguXl4vjU7HQw1qPEw_abZitgjf';
 if(!S.uid)S.uid=(TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user)?'tg'+TG.initDataUnsafe.user.id:'w'+Math.random().toString(36).slice(2)+Date.now().toString(36);
@@ -428,8 +454,9 @@ const esc=t=>String(t).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
 const sbH={apikey:SB_KEY,'Content-Type':'application/json'};
 let st2;
 function pushScore(){if(!SB_URL)return;clearTimeout(st2);st2=setTimeout(()=>{const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);const u=tgUser(),ph=u&&u.photo_url,send=b=>fetch(SB_URL+'/rest/v1/players?on_conflict=id',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates,return=minimal'},sbH),body:JSON.stringify(b)}),b0={id:S.uid,nick:S.nick,score:Math.round(v)};
-send(ph?Object.assign({photo:ph},b0):b0).then(r=>{if(!r.ok&&ph)return send(b0)}).catch(()=>{})},1500)}
+send(ph?Object.assign({photo:ph},b0):b0).then(r=>{if(!r.ok&&ph)return send(b0)}).catch(()=>{});wroll();if((S.ws||0)>0&&S.uid.startsWith('tg'))fetch(SB_URL+'/rest/v1/weekly?on_conflict=id,wkey',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates,return=minimal'},sbH),body:JSON.stringify(Object.assign({id:S.uid,wkey:S.wk,nick:S.nick,score:Math.round(S.ws)},ph?{photo:ph}:{}))}).catch(()=>{})},1500)}
 async function loadTop(){const el=$('#toplist');if(!el)return;const v=wealth();
+if(tp){wroll();if(!SB_URL)return;try{const L=await sb('weekly?select=id,nick,photo,score&wkey=eq.'+wkU()+'&id=like.tg*&order=score.desc&limit=20');if(!Array.isArray(L))throw 0;L.forEach(x=>x.score=+x.score||0);el.innerHTML=star(topHtml(L,S.ws||0,1));pushScore()}catch(e){el.innerHTML='<p class="pr">Недельный топ пока недоступен: выполни SQL из supabase_events.sql.</p>'}return}
 if(!SB_URL){el.innerHTML=star(topList(v));return}
 try{const qp=async sel=>(await fetch(SB_URL+'/rest/v1/players?select='+sel+'&id=like.tg*&nick=neq.'+encodeURIComponent('Игрок')+'&order=score.desc&limit=20',{headers:sbH})).json();let L=await qp('id,nick,score,photo');if(!Array.isArray(L))L=await qp('id,nick,score');if(!Array.isArray(L))throw 0;
 L.forEach(x=>x.score=+x.score||0);el.innerHTML=star(topHtml(L,v));pushScore()}catch(e){el.innerHTML=star(topList(v))}}
@@ -459,7 +486,7 @@ function jetCrash(){J.run=0;busy=false;jetDraw();$('#rk').innerHTML='💥';$('#j
 S.jh=(S.jh||[]).concat({m:J.m,w:0}).slice(-30);save();jetHist();snd('lose')}
 /* ===== КРАФТ (скрещивание) ===== */
 const BGS=[['Зелёный','#3fae49','#1b5e20',1.3,30],['Жёлтый','#ffd34d','#b8860b',1.7,24],['Синий','#2aa5ff','#0a4a9e',2.1,18],['Оранжевый','#ff9a3d','#c24100',3,12],['Белый','#ffffff','#9aa0a6',4.3,8],['Коричневый','#a9744a','#4e2f17',6.8,5],['Onyx Black','#3a3a44','#0c0c10',17,2.2],['Black','#111','#000',42,.8]];
-const bgE=(e,i)=>`<span class="bgi" style="background:radial-gradient(circle at 50% 35%,${BGS[i][1]},${BGS[i][2]})">${e}</span>`;
+const bgE=(e,i)=>`<span class="bgi" style="background-color:${BGS[i][2]};background-image:radial-gradient(farthest-corner at 50% 40%,${BGS[i][1]} 0%,${BGS[i][2]} 130%)">${e}</span>`;
 const bgc=i=>i>=6?'#cfd0da':BGS[i][1],tOf=(t,b)=>Math.min(7,t+(b>=6?3:b>=4?2:b>=2?1:0));
 function pickBg(){let r=Math.random()*100;for(let i=0;i<BGS.length;i++){r-=BGS[i][4];if(r<0)return i}return 0}
 let cr='',CRN=[];
@@ -497,6 +524,51 @@ function pushDrop(it,src){if(!SB_URL||!(it.p>=300))return;const u=tgUser(),ph=(u
 FEED.unshift(Object.assign({},row));FEED=FEED.slice(0,20);FK='';
 fetch(SB_URL+'/rest/v1/drops',{method:'POST',headers:Object.assign({Prefer:'return=minimal'},sbH),body:JSON.stringify(row)}).catch(()=>{})}
 setInterval(()=>{if(tab==='cases'&&cur===null&&!busy)loadFeed()},6000);
+/* ===== ЕЖЕДНЕВНЫЙ БОНУС ===== */
+const DB=[500,1000,1500,2500,4000,6000,15000];
+const dkey=(o=0)=>{const d=new Date();d.setDate(d.getDate()+o);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
+function bonusState(){const st=S.ds||0,last=S.dd||'';if(last===dkey())return{st,can:0};if(last===dkey(-1))return{st,can:1};return{st:0,can:1}}
+function claimBonus(){const b=bonusState();if(!b.can)return;const n=b.st+1,i=(n-1)%7;S.ds=n;S.dd=dkey();let msg;
+if(i===6){S.b+=DB[6];S.tk=S.tk||{};S.tk['Космос']=(S.tk['Космос']||0)+1;msg='+⭐ '+fmt(DB[6])+' и кейс «Космос»'}else{S.b+=DB[i];msg='+⭐ '+fmt(DB[i])}
+save();render();snd('win');toast('День '+n+': '+msg)}
+function bonusHtml(){const b=bonusState(),nx=b.st%7,last=(b.st-1)%7;
+const ds=DB.map((v,i)=>{const done=b.can?i<nx:i<=last,now=b.can&&i===nx;return `<div class="dd ${done?'done':''} ${now?'now':''}">Д${i+1}<br>${i==6?'🎁':v>=1000?v/1000+'к':v}</div>`}).join('');
+return `<div class="card" style="text-align:left;margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center"><div class="nm" style="font-size:16px">🔥 Ежедневный бонус</div><div class="pr">Серия: ${b.st} дн.</div></div><div class="dbn">${ds}</div><button class="btn" style="margin-top:0" onclick="claimBonus()" ${b.can?'':'disabled'}>${b.can?(nx==6?'Забрать ⭐ '+fmt(DB[6])+' + кейс':'Забрать ⭐ '+fmt(DB[nx])):'Приходи завтра'}</button></div>`}
+/* ===== КОЛЛЕКЦИЯ ===== */
+function colStats(){const all=[...new Set(C.filter(c=>!c.d).flatMap(c=>c.i.map(x=>x.n)))];return [all.filter(n=>S.col&&S.col[n]).length,all.length]}
+function colRow(){const [a,b]=colStats();return `<div class="row" onclick="go('col')"><span>📚 Коллекция<div class="pr">${a}/${b} моделей</div></span><b>›</b></div><div class="row" onclick="go('promo')"><span>🎟️ Промокод</span><b>›</b></div>`}
+function claimCol(n){const c=C.find(z=>z.n===n&&!z.d);S.cr=S.cr||{};if(!c||S.cr[n]||!c.i.every(x=>S.col&&S.col[x.n]))return;const rw=Math.max(2000,c.p*30);S.cr[n]=1;S.b+=rw;save();render();snd('win');toast('Коллекция «'+n+'» собрана! +⭐ '+fmt(rw))}
+function colView(){S.cr=S.cr||{};const ok=n=>S.col&&S.col[n],cs=C.filter(c=>!c.d),[have,total]=colStats();
+const bgs=BGS.map((b,i)=>`<div class="ach ${S.cbg&&S.cbg[i]?'on':''}"><i style="width:34px;height:34px;border-radius:9px;margin:0 auto;background:radial-gradient(circle at 50% 35%,${b[1]},${b[2]})"></i><small>${b[0]}</small></div>`).join('');
+return `<button class="btn g" style="margin:0 0 12px;padding:10px" onclick="go('cases')">← Назад</button><h2>📚 Коллекция</h2><div class="card" style="text-align:left;margin-bottom:14px"><div class="nm">Собрано моделей: ${have}/${total}</div><div class="bar"><i style="width:${have/total*100}%"></i></div><div class="pr">Собери все 8 подарков кейса и забери награду. Засчитываются подарки, которые у тебя были.</div></div><h2>Фоны крафта</h2><div class="g3" style="grid-template-columns:repeat(4,1fr);margin-bottom:18px">${bgs}</div>`+cs.map(c=>{const got=c.i.filter(x=>ok(x.n)).length,full=got===c.i.length,cl=S.cr[c.n],rw=Math.max(2000,c.p*30);
+return `<div class="card" style="text-align:left;margin-bottom:10px"><div style="display:flex;justify-content:space-between;align-items:center"><div class="nm" style="font-size:15px">${c.n}</div><div class="pr">${got}/${c.i.length}</div></div><div class="grid4" style="margin-top:8px">${c.i.map(x=>ok(x.n)?`<div class="mini" style="border-color:${TC[x.t]}">${x.e}<small>${x.n}</small></div>`:`<div class="mini" style="opacity:.28;filter:grayscale(1)"><span style="font-size:34px;line-height:42px">?</span><small>???</small></div>`).join('')}</div>${full?(cl?'<div class="pr" style="margin-top:8px">✓ Награда получена</div>':`<button class="btn" style="padding:10px;font-size:14px" onclick="claimCol('${c.n}')">Забрать ⭐ ${fmt(rw)}</button>`):''}</div>`}).join('')}
+/* ===== ЗИМНИЙ ИВЕНТ ===== */
+const EV_END=new Date('2027-01-31T23:59:59').getTime(),EVC=['Снежный','Новогодний','Ледяной'];
+const EQ=[{id:'a',t:'eopen',g:3,n:'Открой 3 зимних кейса',r:2000,x:20},{id:'b',t:'eopen',g:15,n:'Открой 15 зимних кейсов',r:15000,x:80},{id:'c',t:'espend',g:5000,n:'Потрать ⭐ 5 000 на зимние кейсы',r:5000,x:50},{id:'d',t:'edrop',g:5000,n:'Выбей зимний подарок дороже ⭐ 5 000',r:12000,x:100},{id:'e',t:'edrop',g:50000,n:'Выбей зимний подарок дороже ⭐ 50 000',r:100000,x:200}];
+const EM=[{p:20,k:'stars',v:3000,t:'⭐ 3 000'},{p:60,k:'case',c:'Новогодний',q:2,t:'Кейс «Новогодний» ×2'},{p:120,k:'stars',v:15000,t:'⭐ 15 000'},{p:200,k:'case',c:'Ледяной',q:3,t:'Кейс «Ледяной» ×3'},{p:320,k:'nft',price:60000,t:'Снежный шар · ⭐ 60 000'},{p:500,k:'stars',v:100000,t:'⭐ 100 000'}];
+function evAdd(n,spent,top){S.eq=S.eq||{};S.eq.eopen=(S.eq.eopen||0)+n;S.eq.espend=(S.eq.espend||0)+spent;S.eq.edrop=Math.max(S.eq.edrop||0,top);S.ep=(S.ep||0)+n*5}
+function claimEQ(id){const q=EQ.find(z=>z.id===id);S.eq=S.eq||{};S.ec=S.ec||{};if(!q||S.ec[id]||(S.eq[q.t]||0)<q.g)return;S.ec[id]=1;S.b+=q.r;S.ep=(S.ep||0)+q.x;save();render();snd('win');toast('+⭐ '+fmt(q.r)+' и '+q.x+' очков ивента')}
+function claimEM(i){const m=EM[i];S.em=S.em||{};if(S.em[i]||(S.ep||0)<m.p)return;S.em[i]=1;
+if(m.k==='stars')S.b+=m.v;else if(m.k==='case'){S.tk=S.tk||{};S.tk[m.c]=(S.tk[m.c]||0)+m.q}else{const x=C.find(c=>c.n==='Снежный').i.find(z=>z.n==='Снежный шар');S.inv.push({id:S.id++,e:x.e,n:x.n,p:m.price,t:7})}
+save();render();snd('win');toast('Получено: '+m.t)}
+function evView(){S.eq=S.eq||{};S.ec=S.ec||{};S.em=S.em||{};const left=EV_END-Date.now(),pts=S.ep||0,nx=EM.find((m,i)=>!S.em[i]&&m.p>pts)||EM[EM.length-1];
+const hd=`<div class="snowbox"><div style="font-size:22px;font-weight:900">❄️ Зимний ивент</div><div class="pr" style="color:#dff3ff;margin-top:4px">${left>0?'До конца: '+Math.floor(left/864e5)+' д '+Math.floor(left%864e5/36e5)+' ч':'Ивент завершён'}</div><div style="margin-top:12px;font-weight:800">Очки ивента: ${fmt(pts)}</div><div class="bar"><i style="width:${Math.min(100,pts/EM[EM.length-1].p*100)}%"></i></div><div class="pr" style="color:#dff3ff">Следующая награда на ${nx.p} очках. Каждое открытие зимнего кейса даёт 5 очков</div></div>`;
+const cs=EVC.map(n=>{const i=C.findIndex(c=>c.n===n),c=C[i];return `<div class="card" style="border-color:#6cc6ff" onclick="view(${i})"><div class="pic">${c.e}</div><div class="nm">${c.n}</div><div class="pr">⭐ ${fmt(c.p)}</div></div>`}).join('');
+const qs=EQ.map(q=>{const p=S.eq[q.t]||0,done=p>=q.g,got=S.ec[q.id],w=Math.min(100,p/q.g*100);return `<div class="row" style="display:block"><div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><span>${q.n}<div class="pr">⭐ ${fmt(q.r)} + ${q.x} очков</div></span>${got?'<b>✓</b>':done?`<button class="btn" style="width:auto;margin:0;padding:10px 14px;font-size:14px" onclick="claimEQ('${q.id}')">Забрать</button>`:`<span class="pr">${fmt(Math.min(p,q.g))}/${fmt(q.g)}</span>`}</div><div class="bar"><i style="width:${w}%"></i></div></div>`}).join('');
+const ms=EM.map((m,i)=>{const got=S.em[i],ok=pts>=m.p;return `<div class="row" style="font-size:14px"><span><b style="color:var(--mut)">${m.p}</b> · ${m.t}</span>${got?'<b>✓</b>':ok?`<button class="btn" style="width:auto;margin:0;padding:10px 14px;font-size:14px" onclick="claimEM(${i})">Забрать</button>`:'<span class="pr">🔒</span>'}</div>`}).join('');
+return hd+'<h2>Зимние кейсы</h2><div class="grid" style="grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:6px">'+cs+'</div><h2 style="margin-top:20px">Задания ивента</h2>'+qs+'<h2 style="margin-top:20px">Награды за очки</h2>'+ms}
+/* ===== НЕДЕЛЬНЫЙ ТОП ===== */
+const wkU=(o=0)=>{const d=new Date();d.setUTCHours(0,0,0,0);d.setUTCDate(d.getUTCDate()-((d.getUTCDay()+6)%7)+o*7);return d.toISOString().slice(0,10)};
+function wroll(){if(S.wk!==wkU()){S.wk=wkU();S.ws=0}}
+const prz=r=>r==1?{s:100000,c:3,t:'🥇 ⭐ 100 000 + 3 кейса «Космос»'}:r==2?{s:50000,c:2,t:'🥈 ⭐ 50 000 + 2 кейса «Космос»'}:r==3?{s:25000,c:1,t:'🥉 ⭐ 25 000 + кейс «Космос»'}:r<=10?{s:5000,c:0,t:'⭐ 5 000'}:null;
+let tp=0;
+function setTp(k){tp=k;render()}
+function weekHead(){const left=new Date(wkU(1)+'T00:00:00Z')-Date.now();return `<div class="me-card" style="animation:none"><div class="nm">🏆 Топ недели: выбито в кейсах</div><div class="pr" style="margin-top:6px">Сброс через ${Math.floor(left/864e5)} д ${Math.floor(left%864e5/36e5)} ч · твой результат ⭐ ${fmt(S.ws||0)}</div><div class="pr" style="margin-top:8px;line-height:1.6">${[1,2,3].map(r=>prz(r).t).join('<br>')}<br>4–10 места: ⭐ 5 000</div></div>`}
+function topView(){wroll();setTimeout(loadTop,0);setTimeout(claimWeekly,0);return `<div class="mults" style="margin-bottom:14px"><button class="${tp?'':'on'}" onclick="setTp(0)">Богатство</button><button class="${tp?'on':''}" onclick="setTp(1)">Неделя 🏆</button></div>${tp?weekHead():'<p class="pr" style="margin:-6px 0 12px">По стоимости баланса и предметов</p>'}<div id="toplist"><p class="pr">Загрузка…</p></div>`}
+async function claimWeekly(){if(CS&&!cloudReady)return setTimeout(claimWeekly,3000);const pk=wkU(-1);if(S.wpk===pk||!SB_URL)return;
+try{const L=await sb('weekly?select=id,score&wkey=eq.'+pk+'&score=gt.0&order=score.desc&limit=10');if(!Array.isArray(L))return;const i=L.findIndex(x=>x.id===S.uid);S.wpk=pk;if(i<0){save();return}
+const p=prz(i+1);S.b+=p.s;if(p.c){S.tk=S.tk||{};S.tk['Космос']=(S.tk['Космос']||0)+p.c}save();setBal();snd('win');toast('🏆 Приз недели: место #'+(i+1)+'! '+p.t)}catch(e){}}
+setTimeout(claimWeekly,6000);
 /* ===== РЫНОК И ОБМЕН ===== */
 let ms=0,mt=0,MK=[],TR=[],ti=0,cdl=0;
 const nn=t=>String(t||'').trim().replace(/^@/,'').toLowerCase().slice(0,32);
@@ -557,6 +629,4 @@ if(Array.isArray(L))for(const d of L){if(busy)break;const r=await sb('deliveries
 if(Array.isArray(r)&&r.length){if(d.item)addIt(d.item);S.b+=Math.max(0,Math.floor(+d.stars)||0);got.push(d.note||'Доставка')}}
 if(got.length){save();setBal();toast('Пришло: '+got.slice(0,2).join(', ')+(got.length>2?' и ещё '+(got.length-2):''));if(!busy&&(tab==='inv'||tab==='mk'))render()}}catch(e){}
 cdl=0}
-setTimeout(claimDel,3000);setInterval(claimDel,15000);
-render();cloudLoad();pushScore();
-</script></body></html>
+setTimeout(claimDel,30
