@@ -120,7 +120,7 @@ nav i{transition:transform .25s}
 .pd .pn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:6px}
 .pdb{margin-top:8px;border-radius:14px 14px 0 0;display:grid;place-items:center;font-size:30px;font-weight:900;color:rgba(0,0,0,.55)}
 .crown{font-size:24px;animation:float 2s ease-in-out infinite}
-.ta{display:inline-grid;place-items:center;border-radius:50%;font-weight:900;flex:none;box-shadow:0 0 12px rgba(0,0,0,.5)}
+.ta img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.ta{position:relative;overflow:hidden;display:inline-grid;place-items:center;border-radius:50%;font-weight:900;flex:none;box-shadow:0 0 12px rgba(0,0,0,.5)}
 .me-card{background:linear-gradient(135deg,rgba(225,29,46,.35),rgba(225,29,46,.08));border:1px solid var(--red);border-radius:16px;padding:14px;margin-bottom:12px;animation:wglow 3s infinite}
 .top .sc{font-weight:900;white-space:nowrap}
 /* ===== Профиль ===== */
@@ -361,14 +361,14 @@ const TI=[['Легенда',1e6,'#ffd34d'],['Кит',250000,'#5cbcff'],['Маг�
 const ttl=v=>TI.find(x=>v>=x[1]);
 const wealth=()=>S.b+S.inv.reduce((a,x)=>a+x.p,0);
 const hue=s=>{let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%BC.length;return BC[h]};
-const avt=(n,sz)=>{const c=hue(n);return `<span class="ta" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz*.45)}px;background:linear-gradient(135deg,${c[0]},${c[1]})">${esc((String(n).replace('@','')[0]||'?').toUpperCase())}</span>`};
+const avt=(n,sz,ph)=>{const c=hue(n);return `<span class="ta" style="width:${sz}px;height:${sz}px;font-size:${Math.round(sz*.45)}px;background:linear-gradient(135deg,${c[0]},${c[1]})">${esc((String(n).replace('@','')[0]||'?').toUpperCase())}${/^https:\/\//.test(ph||'')?`<img src="${esc(ph)}" alt="" referrerpolicy="no-referrer" onerror="this.remove()">`:''}</span>`};
 function topHtml(L,v){
 L=L.slice();if(!L.some(x=>x.id===S.uid))L.push({id:S.uid,nick:S.nick,score:v});L.sort((a,b)=>b.score-a.score);
-const mi=L.findIndex(x=>x.id===S.uid),lead=L[0].score||1,N=x=>x.id===S.uid?S.nick:x.nick,me=L[mi],t=ttl(v);
+const mi=L.findIndex(x=>x.id===S.uid),lead=L[0].score||1,N=x=>x.id===S.uid?S.nick:x.nick,me=L[mi],t=ttl(v),PH=x=>x.id===S.uid?((tgUser()||{}).photo_url||x.photo):x.photo;
 const pod=[1,0,2].map(k=>{const x=L[k];if(!x)return '<div class="pd"></div>';const h=[104,80,62][k],cl=['linear-gradient(#ffd34d,#a85d00)','linear-gradient(#e5e7eb,#6b7280)','linear-gradient(#f59e5b,#8a3d0a)'][k];
-return `<div class="pd">${k==0?'<div class="crown">👑</div>':''}${avt(N(x),k==0?64:52)}<div class="nm pn">${esc(N(x))}</div><div class="pr">⭐ ${fmt(x.score)}</div><div class="pdb" style="height:${h}px;background:${cl}">${k+1}</div></div>`}).join('');
+return `<div class="pd">${k==0?'<div class="crown">👑</div>':''}${avt(N(x),k==0?64:52,PH(x))}<div class="nm pn">${esc(N(x))}</div><div class="pr">⭐ ${fmt(x.score)}</div><div class="pdb" style="height:${h}px;background:${cl}">${k+1}</div></div>`}).join('');
 const gap=mi>0?'До #'+mi+' осталось ⭐ '+fmt(L[mi-1].score-v+1):'Ты лидер! 👑';
-const rows=L.map((x,i)=>i<3?'':`<div class="top ${x.id===S.uid?'me':''}"><b>${i+1}</b>${avt(N(x),38)}<div class="tn"><div>${esc(N(x))}${x.id===S.uid?' (ты)':''}</div><div class="pr" style="color:${ttl(x.score)[2]}">${ttl(x.score)[0]}</div><div class="bar" style="margin-top:6px;height:4px"><i style="width:${Math.max(3,x.score/lead*100)}%"></i></div></div><div class="sc">⭐ ${fmt(x.score)}</div></div>`).join('');
+const rows=L.map((x,i)=>i<3?'':`<div class="top ${x.id===S.uid?'me':''}"><b>${i+1}</b>${avt(N(x),38,PH(x))}<div class="tn"><div>${esc(N(x))}${x.id===S.uid?' (ты)':''}</div><div class="pr" style="color:${ttl(x.score)[2]}">${ttl(x.score)[0]}</div><div class="bar" style="margin-top:6px;height:4px"><i style="width:${Math.max(3,x.score/lead*100)}%"></i></div></div><div class="sc">⭐ ${fmt(x.score)}</div></div>`).join('');
 return `<div class="me-card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="nm" style="font-size:16px">Твоё место #${mi+1}</div><span class="chip" style="color:${t[2]}">${t[0]}</span></div><div class="pr" style="margin-top:6px">${gap}</div></div><div class="pod">${pod}</div>${rows}`}
 function topList(v){return topHtml([['CryptoKing',250000],['NFT_Master',120000],['Pepe_Lord',64000],['SnoopFan',31000],['Dubai_Whale',17500],['Gift_Hunter',9800],['Newbie',4200],['Lucky_Sam',2100],['Case_Fan',900]].map((x,i)=>({id:'b'+i,nick:x[0],score:x[1]})),v)}
 /* ===== Профиль ===== */
@@ -417,10 +417,11 @@ if(!S.uid)S.uid=(TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user)?'tg'+TG.initData
 const esc=t=>String(t).replace(/[&<>"']/g,c=>'&#'+c.charCodeAt(0)+';');
 const sbH={apikey:SB_KEY,'Content-Type':'application/json'};
 let st2;
-function pushScore(){if(!SB_URL)return;clearTimeout(st2);st2=setTimeout(()=>{const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);fetch(SB_URL+'/rest/v1/players?on_conflict=id',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates,return=minimal'},sbH),body:JSON.stringify({id:S.uid,nick:S.nick,score:Math.round(v)})}).catch(()=>{})},1500)}
+function pushScore(){if(!SB_URL)return;clearTimeout(st2);st2=setTimeout(()=>{const v=S.b+S.inv.reduce((a,x)=>a+x.p,0);const u=tgUser(),ph=u&&u.photo_url,send=b=>fetch(SB_URL+'/rest/v1/players?on_conflict=id',{method:'POST',headers:Object.assign({Prefer:'resolution=merge-duplicates,return=minimal'},sbH),body:JSON.stringify(b)}),b0={id:S.uid,nick:S.nick,score:Math.round(v)};
+send(ph?Object.assign({photo:ph},b0):b0).then(r=>{if(!r.ok&&ph)return send(b0)}).catch(()=>{})},1500)}
 async function loadTop(){const el=$('#toplist');if(!el)return;const v=wealth();
 if(!SB_URL){el.innerHTML=star(topList(v));return}
-try{const r=await fetch(SB_URL+'/rest/v1/players?select=id,nick,score&id=like.tg*&nick=neq.'+encodeURIComponent('Игрок')+'&order=score.desc&limit=20',{headers:sbH});const L=await r.json();if(!Array.isArray(L))throw 0;
+try{const qp=async sel=>(await fetch(SB_URL+'/rest/v1/players?select='+sel+'&id=like.tg*&nick=neq.'+encodeURIComponent('Игрок')+'&order=score.desc&limit=20',{headers:sbH})).json();let L=await qp('id,nick,score,photo');if(!Array.isArray(L))L=await qp('id,nick,score');if(!Array.isArray(L))throw 0;
 L.forEach(x=>x.score=+x.score||0);el.innerHTML=star(topHtml(L,v));pushScore()}catch(e){el.innerHTML=star(topList(v))}}
 /* ===== ДЖЕТ ===== */
 const RKT='<svg viewBox="0 0 60 120" width="54"><path d="M30 4C44 22 46 52 42 82H18C14 52 16 22 30 4z" fill="#f4f4f4"/><circle cx="30" cy="44" r="8" fill="#2aa5ff" stroke="#fff" stroke-width="3"/><path d="M18 70L4 96l16-6zM42 70l14 26-16-6z" fill="#e11d2e"/><path d="M24 82h12l-6 14z" fill="#e11d2e"/><g class="fl"><path d="M22 84h16l-8 34z" fill="#ffa63d"/><path d="M26 84h8l-4 20z" fill="#fff4b0"/></g></svg>';
