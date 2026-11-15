@@ -167,12 +167,6 @@ nav .ev.on{color:#fff}
 @keyframes snowf{to{background-position:0 160px}}
 .snowbox>*{position:relative;z-index:1}
 .dbn{display:flex;gap:6px;margin:10px 0}.dd{flex:1;text-align:center;padding:8px 0;border-radius:10px;background:#0d0d0d;border:1px solid var(--line);font-size:11px;color:var(--mut);line-height:1.4}.dd.done{background:var(--red);border-color:var(--red);color:#fff}.dd.now{border-color:#fff;color:#fff;animation:wglow 2s infinite}
-/* ===== фикс: фон NFT заливает всю плитку ===== */
-.bgi{border-radius:inherit}
-.pic .bgi img,.mini .bgi img,.slot .bgi img,.sl .bgi img,.pi .bgi img,.fi .bgi img{width:86%;height:86%}
-.cell:has(.bgi){padding:0;overflow:hidden}
-.cell .bgi{width:100%;height:100%;border-radius:10px}
-.cell .bgi img{width:60px;height:60px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style></head><body>
 <header><div class="logo">NFT <b>CASES</b></div><div class="bal" id="bal">⭐ 0</div></header>
@@ -188,8 +182,6 @@ nav .ev.on{color:#fff}
 </nav>
 <div id="toast"></div>
 <script>
-window.addEventListener('error',function(e){var m=document.getElementById('main');if(m)m.innerHTML='<div style="padding:16px;color:#ff8a8a;font:13px monospace;word-break:break-all">ОШИБКА: '+String(e.message)+'<br>строка '+e.lineno+':'+e.colno+'</div>'});
-window.addEventListener('unhandledrejection',function(e){var m=document.getElementById('main');if(m&&!m.children.length)m.innerHTML='<div style="padding:16px;color:#ff8a8a;font:13px monospace">ОШИБКА: '+String(e.reason)+'</div>'});
 const STAR='<svg class="st" viewBox="0 0 24 24"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8-6.2 3.8 1.6-7L2 9.2l7.1-.6z" fill="#ffc22e"/><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.6 7-6.2-3.8z" fill="#fff" opacity=".22"/></svg>';const star=h=>h.replace(/⭐(?![^<]*>)/g,STAR);const $=s=>document.querySelector(s),fmt=n=>Math.round(n).toLocaleString('ru-RU');
 const F=[.3,.5,.8,1,1.5,4,15,60],W=[41,28,16,8.5,4,1.5,.7,.3],W2=[41.25,28,16,8.5,4,1.5,.7,.05],TC=['#444','#555','#777','#aaa','#ff6b6b','#ff2d3d','#e11d2e','#fff'];
 const C=[
@@ -260,11 +252,10 @@ function go(t){if(busy)return toast('Подожди, идёт открытие�
 function view(i){if(busy)return;const c=C[i];if(c.ev&&Date.now()>EV_END)return toast('Ивент завершён');if(c.rk&&(S.rk||0)<c.rk)return toast('Нужен ранг «'+RK[c.rk-1].n+'». Купи его в профиле');cur=i;render();scrollTo(0,0)}
 function back(){if(busy)return;cur=null;render()}
 function render(){
-S.inv.forEach(x=>{if(x.bg!=null){const c=CAT.find(y=>y.n===x.n);if(c)x.e=bgE(c.e,x.bg)}});
 setBal();
 document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
 const key=tab+'|'+cur;$('#main').classList.toggle('still',key===lastKey);lastKey=key;
-try{$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView,pass:passView,jet:jetView,mk:mkView,ev:evView,col:colView})[tab]());}catch(err){$('#main').innerHTML='<div style="padding:16px;color:#ff8a8a;font:13px monospace;word-break:break-all">ОШИБКА ('+tab+'): '+String(err&&err.message)+'<br><br>'+String(err&&err.stack).slice(0,400)+'<br><br><button class="btn" onclick="try{localStorage.removeItem(\'nftc\')}catch(e){}location.reload()">Сбросить сохранение</button></div>'}
+$('#main').innerHTML=star(cur!==null?caseView():({cases:casesView,up:upView,inv:invView,promo:promoView,prof:profView,top:topView,pass:passView,jet:jetView,mk:mkView,ev:evView,col:colView})[tab]());
 cd();if(tab==='jet')jetHist()}
 function casesView(){setTimeout(loadFeed,0);return `<div class="feed" id="feed">${feedHtml()}</div>${bonusHtml()}<div class="card" style="margin-bottom:12px;display:flex;align-items:center;gap:14px;text-align:left;background:linear-gradient(135deg,#1a0b3a,#e11d2e)" onclick="go('jet')"><span style="font-size:42px">🚀</span><div><div class="nm" style="font-size:19px">ДЖЕТ</div><div class="pr" style="color:#fff">Лети выше, лови иксы: небо → космос → стратосфера</div></div></div><div class="grid" style="margin-bottom:12px;grid-template-columns:repeat(3,1fr);gap:8px"><div class="card" onclick="go('col')"><div style="font-size:30px">📚</div><div class="nm">Коллекция</div><div class="pr">Собери всё</div></div><div class="card" onclick="openMk(0)"><div style="font-size:32px">🛒</div><div class="nm">Рынок</div><div class="pr">Торговля</div></div><div class="card" onclick="openMk(2)"><div style="font-size:32px">🤝</div><div class="nm">Обмен</div><div class="pr">С друзьями</div></div></div><h2>Кейсы</h2><div class="grid">`+C.map((c,i)=>{if(c.ev)return '';const lk=c.rk&&(S.rk||0)<c.rk;return `<div class="card" style="${lk?'opacity:.5':''}" onclick="view(${i})"><div class="pic">${c.e}</div><div class="nm">${c.n}</div><div class="pr">${lk?'🔒 Ранг «'+RK[c.rk-1].n+'»':c.p?'⭐ '+fmt(c.p):(c.d?'РАЗ В ДЕНЬ':'БЕСПЛАТНО')}</div></div>`}).join('')+'</div>'}
 function caseView(){const c=C[cur],idle=[];for(let k=0;k<20;k++)idle.push(pick(c));
@@ -421,7 +412,7 @@ ${rkView()}<h2 style="margin-top:20px">Настройки</h2>${sw('fast','Бе�
 const TG=window.Telegram&&Telegram.WebApp,CS=TG&&TG.CloudStorage;let ct,cloudReady=false;
 if(TG){try{TG.ready();TG.expand();TG.setHeaderColor&&TG.setHeaderColor('#0a0a0a');TG.setBackgroundColor&&TG.setBackgroundColor('#0a0a0a')}catch(e){}}
 function cloudSave(){if(!CS||!cloudReady)return;clearTimeout(ct);ct=setTimeout(()=>{try{const j=JSON.stringify(S),n=Math.ceil(j.length/3500);for(let k=0;k<n;k++)CS.setItem('c'+k,j.slice(k*3500,(k+1)*3500));CS.setItem('n',String(n))}catch(e){}},500)}
-function cloudLoad(){if(!CS){return}try{CS.getItem('n',(e,v)=>{const n=parseInt(v);if(e||!n){cloudReady=true;return}CS.getItems(Array.from({length:n},(_,k)=>'c'+k),(e2,r)=>{try{if(!e2){const x=JSON.parse(Array.from({length:n},(_,k)=>r['c'+k]).join(''));if(typeof x.b==='number'){Object.assign(S,x);syncNick();shown=S.b;render();pushScore()}}}catch(z){console.log(z)}cloudReady=true})})}catch(e){cloudReady=true}}
+function cloudLoad(){if(!CS){return}try{CS.getItem('n',(e,v)=>{const n=parseInt(v);if(e||!n){cloudReady=true;return}CS.getItems(Array.from({length:n},(_,k)=>'c'+k),(e2,r)=>{try{if(!e2){const x=JSON.parse(Array.from({length:n},(_,k)=>r['c'+k]).join(''));if(typeof x.b==='number'){Object.assign(S,x);syncNick();shown=S.b;render();pushScore()}}}catch(z){}cloudReady=true})})}catch(e){cloudReady=true}}
 const BG=new Audio('music.mp3');BG.loop=true;BG.volume=.35;BG.preload='auto';
 function musicSync(){try{if(S.mus&&!document.hidden){const p=BG.play();if(p&&p.catch)p.catch(()=>{})}else BG.pause()}catch(e){}}
 document.addEventListener('click',musicSync);document.addEventListener('visibilitychange',musicSync);
@@ -488,7 +479,7 @@ function jetCrash(){J.run=0;busy=false;jetDraw();$('#rk').innerHTML='💥';$('#j
 S.jh=(S.jh||[]).concat({m:J.m,w:0}).slice(-30);save();jetHist();snd('lose')}
 /* ===== КРАФТ (скрещивание) ===== */
 const BGS=[['Зелёный','#3fae49','#1b5e20',1.3,30],['Жёлтый','#ffd34d','#b8860b',1.7,24],['Синий','#2aa5ff','#0a4a9e',2.1,18],['Оранжевый','#ff9a3d','#c24100',3,12],['Белый','#ffffff','#9aa0a6',4.3,8],['Коричневый','#a9744a','#4e2f17',6.8,5],['Onyx Black','#3a3a44','#0c0c10',17,2.2],['Black','#111','#000',42,.8]];
-const bgE=(e,i)=>`<span class="bgi" style="background-color:${BGS[i][2]};background-image:radial-gradient(farthest-corner at 50% 40%,${BGS[i][1]} 0%,${BGS[i][2]} 130%)">${e}</span>`;
+const bgE=(e,i)=>`<span class="bgi" style="background:radial-gradient(circle at 50% 35%,${BGS[i][1]},${BGS[i][2]})">${e}</span>`;
 const bgc=i=>i>=6?'#cfd0da':BGS[i][1],tOf=(t,b)=>Math.min(7,t+(b>=6?3:b>=4?2:b>=2?1:0));
 function pickBg(){let r=Math.random()*100;for(let i=0;i<BGS.length;i++){r-=BGS[i][4];if(r<0)return i}return 0}
 let cr='',CRN=[];
@@ -623,4 +614,14 @@ if(!Array.isArray(r)||!r.length){if(give)S.inv.splice(k,0,give);toast('Пред�
 catch(e){if(give)S.inv.splice(k,0,give);toast('Ошибка сети')}
 busy=false;save();render()}
 async function trDecline(i){const t=TR[i];if(busy||!t)return;busy=true;
-try{const r=await sb('trades?id=eq.'+t.id+'&status=eq.pending',{method:'PATCH',body:jb({status:'declined'})});if(Array.is
+try{const r=await sb('trades?id=eq.'+t.id+'&status=eq.pending',{method:'PATCH',body:jb({status:'declined'})});if(Array.isArray(r)&&r.length){await sb('deliveries',{method:'POST',body:jb({to_id:t.from_id,item:t.item,note:S.nick+' отклонил обмен'})});toast('Отклонено')}}catch(e){toast('Ошибка сети')}
+busy=false;render()}
+async function claimDel(){if(cdl||busy||(CS&&!cloudReady))return;cdl=1;const got=[];
+try{const L=await sb('deliveries?to_id=eq.'+S.uid+'&claimed=eq.false&limit=20');
+if(Array.isArray(L))for(const d of L){if(busy)break;const r=await sb('deliveries?id=eq.'+d.id+'&claimed=eq.false',{method:'PATCH',body:jb({claimed:true})});
+if(Array.isArray(r)&&r.length){if(d.item)addIt(d.item);S.b+=Math.max(0,Math.floor(+d.stars)||0);got.push(d.note||'Доставка')}}
+if(got.length){save();setBal();toast('Пришло: '+got.slice(0,2).join(', ')+(got.length>2?' и ещё '+(got.length-2):''));if(!busy&&(tab==='inv'||tab==='mk'))render()}}catch(e){}
+cdl=0}
+setTimeout(claimDel,3000);setInterval(claimDel,15000);
+render();cloudLoad();pushScore();
+</script></body></html>
